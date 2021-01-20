@@ -2,4 +2,4 @@
 
 This is a Sokoban implementation in Java for school.
 
-### Status : Starting Step 01
+### Status : Step 01 done
