@@ -48,6 +48,7 @@ public class TestIterator {
     public static void main(String[] args) {
         Sequence s = new LinkedList();
         test_iterator(s);
-        // TODO add test for the TableSequenceIterator
+        s = new TableSequence();
+        test_iterator(s);
     }
 }
