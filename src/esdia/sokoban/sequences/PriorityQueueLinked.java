@@ -1,7 +1,7 @@
 package esdia.sokoban.sequences;
 
-public class PriorityQueueLinked<Type extends Comparable<Type>> extends PriorityQueue<Type> {
-    LinkedList<Type> s;
+public class PriorityQueueLinked<V, P extends Comparable<P>> extends PriorityQueue<V, P> {
+    LinkedList<Couple<V, P>> s;
 
     public PriorityQueueLinked() {
         this.s = new LinkedList<>();
@@ -9,13 +9,13 @@ public class PriorityQueueLinked<Type extends Comparable<Type>> extends Priority
     }
 
     @Override
-    public void insert(Type e) {
+    public void insert(Couple<V, P> e) {
         if (this.isEmpty()) {
             this.s.insertHead(e);
             return;
         }
 
-        Link<Type> link = this.s.head;
+        Link<Couple<V, P>> link = this.s.head;
 
         if (link.value.compareTo(e) > 0) {
             this.s.insertHead(e);

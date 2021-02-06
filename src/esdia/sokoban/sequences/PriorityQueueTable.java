@@ -1,7 +1,7 @@
 package esdia.sokoban.sequences;
 
-public class PriorityQueueTable<Type extends Comparable<Type>> extends PriorityQueue<Type> {
-    TableSequence<Type> s;
+public class PriorityQueueTable<V, P extends Comparable<P>> extends PriorityQueue<V, P> {
+    TableSequence<Couple<V, P>> s;
 
     public PriorityQueueTable() {
         this.s = new TableSequence<>();
@@ -14,7 +14,7 @@ public class PriorityQueueTable<Type extends Comparable<Type>> extends PriorityQ
 
     @Override
     @SuppressWarnings("unchecked")
-    public void insert(Type e) {
+    public void insert(Couple<V, P> e) {
         if (this.isEmpty()) {
             this.s.insertHead(e);
             return;
@@ -31,7 +31,7 @@ public class PriorityQueueTable<Type extends Comparable<Type>> extends PriorityQ
             current = this.s.table.length - 1;
         }
 
-        while (next != this.s.head && ((Type) this.s.table[current]).compareTo(e) > 0) {
+        while (next != this.s.head && ((Couple<V, P>) this.s.table[current]).compareTo(e) > 0) {
             this.s.table[next] = this.s.table[current];
 
             next = current;
