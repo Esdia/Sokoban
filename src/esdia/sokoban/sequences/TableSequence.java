@@ -72,4 +72,9 @@ public class TableSequence implements Sequence {
     public boolean isEmpty() {
         return this.size == 0;
     }
+
+    @Override
+    public Iterator iterator() {
+        return null;
+    }
 }

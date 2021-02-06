@@ -7,4 +7,6 @@ public interface Sequence {
     int getHead();
 
     boolean isEmpty();
+
+    Iterator iterator();
 }
