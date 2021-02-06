@@ -27,8 +27,9 @@ public class TestPriorityQueue {
     }
 
     public static void main(String[] args) {
-        PriorityQueueLinked<Integer> p = new PriorityQueueLinked<>();
+        PriorityQueue<Integer> p = new PriorityQueueLinked<>();
         test_priority(p);
-        // TODO add test for PriorityQueueTable
+        p = new PriorityQueueTable<>();
+        test_priority(p);
     }
 }
