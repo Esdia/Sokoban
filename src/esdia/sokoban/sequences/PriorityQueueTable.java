@@ -8,10 +8,6 @@ public class PriorityQueueTable<V, P extends Comparable<P>> extends PriorityQueu
         super.s = this.s;
     }
 
-    private int get_index(int i) {
-        return i % this.s.table.length;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void insert(Couple<V, P> e) {
