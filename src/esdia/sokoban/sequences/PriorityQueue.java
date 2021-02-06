@@ -9,7 +9,7 @@ public abstract class PriorityQueue<Type extends Comparable<Type>> {
 
     public abstract void insert(Type e);
 
-    public Type extrack() {
+    public Type extract() {
         return s.getHead();
     }
 
