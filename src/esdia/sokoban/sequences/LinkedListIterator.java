@@ -2,7 +2,7 @@ package esdia.sokoban.sequences;
 
 import java.util.NoSuchElementException;
 
-public class LinkedListIterator implements Iterators {
+public class LinkedListIterator implements Iterator {
     LinkedList l;
     Link current;
 

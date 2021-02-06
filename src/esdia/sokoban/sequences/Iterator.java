@@ -1,6 +1,6 @@
 package esdia.sokoban.sequences;
 
-public interface Iterators {
+public interface Iterator {
     boolean hasNext();
     int next();
 
