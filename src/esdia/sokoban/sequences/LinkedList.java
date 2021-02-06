@@ -69,4 +69,8 @@ public class LinkedList implements Sequence {
 
         return out.toString();
     }
+
+    public LinkedListIterator iterator() {
+        return new LinkedListIterator(this);
+    }
 }
