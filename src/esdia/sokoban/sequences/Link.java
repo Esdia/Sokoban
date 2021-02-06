@@ -1,10 +1,10 @@
 package esdia.sokoban.sequences;
 
-public class Cell {
+public class Link {
     int value;
-    Cell next;
+    Link next;
 
-    public Cell(int value, Cell next) {
+    public Link(int value, Link next) {
         this.value = value;
         this.next = next;
     }

@@ -1,8 +1,8 @@
 package esdia.sokoban.sequences;
 
 public class LinkedList implements Sequence {
-    Cell head;
-    Cell tail;
+    Link head;
+    Link tail;
 
     public LinkedList() {
         this.head = null;
@@ -11,7 +11,7 @@ public class LinkedList implements Sequence {
 
     @Override
     public void insertHead(int e) {
-        Cell c = new Cell(e, this.head);
+        Link c = new Link(e, this.head);
 
         if (this.isEmpty()) {
             this.tail = c;
@@ -21,7 +21,7 @@ public class LinkedList implements Sequence {
 
     @Override
     public void insertTail(int e) {
-        Cell c = new Cell(e, null);
+        Link c = new Link(e, null);
         if (this.isEmpty()) {
             this.head = c;
         } else {
@@ -54,7 +54,7 @@ public class LinkedList implements Sequence {
 
     public String toString() {
         StringBuilder out = new StringBuilder("[");
-        Cell c = this.head;
+        Link c = this.head;
         int val;
         while (c != null) {
             val = c.value;
