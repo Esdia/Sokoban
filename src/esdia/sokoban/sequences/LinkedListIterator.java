@@ -14,14 +14,11 @@ public class LinkedListIterator implements Iterator {
     * */
     Link previous, pprevious;
 
-    boolean can_delete;
-
     public LinkedListIterator(LinkedList l) {
         this.l = l;
         this.current = l.head;
         this.previous = null;
         this.pprevious = null;
-        this.can_delete = false;
     }
 
     @Override
@@ -37,28 +34,28 @@ public class LinkedListIterator implements Iterator {
 
         int val = this.current.value;
 
-        this.pprevious = this.previous;
+        if (this.previous != null) {
+            this.pprevious = this.previous;
+        }
         this.previous = this.current;
         this.current = this.current.next;
-        this.can_delete = true;
 
         return val;
     }
 
     @Override
     public void delete() {
-        if (!this.can_delete) {
+        if (this.previous == null) {
             throw new IllegalStateException();
         }
 
-        this.can_delete = false;
-
         if (this.pprevious == null) {
             // next() has been called only once
-            this.l.head = this.previous;
-            return;
+            this.l.head = this.current;
+        } else {
+            this.pprevious.next = this.current;
         }
 
-        this.previous.next = this.current;
+        this.previous = null;
     }
 }
