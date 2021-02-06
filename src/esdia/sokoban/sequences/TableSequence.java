@@ -1,11 +1,11 @@
 package esdia.sokoban.sequences;
 
-public class Table implements Sequence {
+public class TableSequence implements Sequence {
     int[] table;
     int size;
     int head;
 
-    public Table() {
+    public TableSequence() {
         this.table = new int[1];
         this.size = 0;
         this.head = 0;

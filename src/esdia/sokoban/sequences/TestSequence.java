@@ -33,7 +33,7 @@ public class TestSequence {
     public static void main(String[] args) {
         Sequence s = new LinkedList();
         test_seq(s);
-        s = new Table();
+        s = new TableSequence();
         test_seq(s);
     }
 }
