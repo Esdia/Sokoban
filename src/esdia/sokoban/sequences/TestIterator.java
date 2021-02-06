@@ -1,12 +1,12 @@
 package esdia.sokoban.sequences;
 
 public class TestIterator {
-    static void test_iterator(Sequence s) {
+    static void test_iterator(Sequence<Integer> s) {
         for (int i = 0; i < 100; i++) {
             s.insertTail(i);
         }
 
-        Iterator it = s.iterator();
+        Iterator<Integer> it = s.iterator();
 
         assert it.hasNext();
 
@@ -46,9 +46,9 @@ public class TestIterator {
     }
 
     public static void main(String[] args) {
-        Sequence s = new LinkedList();
+        Sequence<Integer> s = new LinkedList<>();
         test_iterator(s);
-        s = new TableSequence();
+        s = new TableSequence<>();
         test_iterator(s);
     }
 }

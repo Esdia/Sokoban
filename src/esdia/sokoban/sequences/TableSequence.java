@@ -1,18 +1,18 @@
 package esdia.sokoban.sequences;
 
-public class TableSequence implements Sequence {
-    int[] table;
+public class TableSequence<Type> implements Sequence<Type> {
+    Object[] table;
     int size;
     int head;
 
     public TableSequence() {
-        this.table = new int[1];
+        this.table = new Object[1];
         this.size = 0;
         this.head = 0;
     }
 
     public void resize() {
-        int[] new_table = new int[2 * this.size];
+        Object[] new_table = new Object[2 * this.size];
 
         int size_bkp = this.size;
         int i = 0;
@@ -27,7 +27,7 @@ public class TableSequence implements Sequence {
     }
 
     @Override
-    public void insertHead(int e) {
+    public void insertHead(Type e) {
         if (this.size == this.table.length) {
             this.resize();
         }
@@ -42,7 +42,7 @@ public class TableSequence implements Sequence {
     }
 
     @Override
-    public void insertTail(int e) {
+    public void insertTail(Type e) {
         if (this.size == this.table.length) {
             this.resize();
         }
@@ -53,12 +53,13 @@ public class TableSequence implements Sequence {
     }
 
     @Override
-    public int getHead() {
+    public Type getHead() {
         if (this.isEmpty()) {
             throw new RuntimeException("Empty Sequence");
         }
 
-        int val = this.table[this.head];
+        @SuppressWarnings("unchecked")
+        Type val = (Type) this.table[this.head];
         this.head++;
         if (this.head >= this.table.length) {
             this.head = 0;
@@ -74,7 +75,7 @@ public class TableSequence implements Sequence {
     }
 
     @Override
-    public Iterator iterator() {
-        return new TableSequenceIterator(this);
+    public TableSequenceIterator<Type> iterator() {
+        return new TableSequenceIterator<>(this);
     }
 }

@@ -1,12 +1,12 @@
 package esdia.sokoban.sequences;
 
-public interface Sequence {
-    void insertHead(int e);
-    void insertTail(int e);
+public interface Sequence<Type> {
+    void insertHead(Type e);
+    void insertTail(Type e);
 
-    int getHead();
+    Type getHead();
 
     boolean isEmpty();
 
-    Iterator iterator();
+    Iterator<Type> iterator();
 }

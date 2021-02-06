@@ -2,9 +2,9 @@ package esdia.sokoban.sequences;
 
 import java.util.NoSuchElementException;
 
-public class LinkedListIterator implements Iterator {
-    LinkedList l;
-    Link current;
+public class LinkedListIterator<Type> implements Iterator<Type> {
+    LinkedList<Type> l;
+    Link<Type> current;
 
     /*
     * We have pprevious -> previous -> current
@@ -12,9 +12,9 @@ public class LinkedListIterator implements Iterator {
     * next(), it will delete previous, hence the need to
     * remember pprevious
     * */
-    Link previous, pprevious;
+    Link<Type> previous, pprevious;
 
-    public LinkedListIterator(LinkedList l) {
+    public LinkedListIterator(LinkedList<Type> l) {
         this.l = l;
         this.current = l.head;
         this.previous = null;
@@ -27,12 +27,12 @@ public class LinkedListIterator implements Iterator {
     }
 
     @Override
-    public int next() {
+    public Type next() {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
 
-        int val = this.current.value;
+        Type val = this.current.value;
 
         if (this.previous != null) {
             this.pprevious = this.previous;

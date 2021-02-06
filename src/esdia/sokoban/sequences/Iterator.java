@@ -1,8 +1,8 @@
 package esdia.sokoban.sequences;
 
-public interface Iterator {
+public interface Iterator<Type> {
     boolean hasNext();
-    int next();
+    Type next();
 
     // Deletes the last element returned by next()
     void delete();

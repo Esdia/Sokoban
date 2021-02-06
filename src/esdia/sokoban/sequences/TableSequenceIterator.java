@@ -2,13 +2,13 @@ package esdia.sokoban.sequences;
 
 import java.util.NoSuchElementException;
 
-public class TableSequenceIterator implements Iterator {
-    TableSequence s;
+public class TableSequenceIterator<Type> implements Iterator<Type> {
+    TableSequence<Type> s;
     int current;
 
     boolean can_delete;
 
-    public TableSequenceIterator(TableSequence s) {
+    public TableSequenceIterator(TableSequence<Type> s) {
         this.s = s;
         this.current = 0;
         this.can_delete = false;
@@ -20,13 +20,14 @@ public class TableSequenceIterator implements Iterator {
     }
 
     @Override
-    public int next() {
+    public Type next() {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
         this.can_delete = true;
 
-        int val = this.s.table[this.current];
+        @SuppressWarnings("unchecked")
+        Type val = (Type) this.s.table[this.current];
         this.current++;
         return val;
     }

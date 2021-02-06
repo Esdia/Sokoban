@@ -1,8 +1,8 @@
 package esdia.sokoban.sequences;
 
-public class LinkedList implements Sequence {
-    Link head;
-    Link tail;
+public class LinkedList<Type> implements Sequence<Type> {
+    Link<Type> head;
+    Link<Type> tail;
 
     public LinkedList() {
         this.head = null;
@@ -10,8 +10,8 @@ public class LinkedList implements Sequence {
     }
 
     @Override
-    public void insertHead(int e) {
-        Link c = new Link(e, this.head);
+    public void insertHead(Type e) {
+        Link<Type> c = new Link<>(e, this.head);
 
         if (this.isEmpty()) {
             this.tail = c;
@@ -20,8 +20,8 @@ public class LinkedList implements Sequence {
     }
 
     @Override
-    public void insertTail(int e) {
-        Link c = new Link(e, null);
+    public void insertTail(Type e) {
+        Link<Type> c = new Link<>(e, null);
         if (this.isEmpty()) {
             this.head = c;
         } else {
@@ -32,12 +32,12 @@ public class LinkedList implements Sequence {
     }
 
     @Override
-    public int getHead() {
+    public Type getHead() {
         if (this.isEmpty()) {
             throw new RuntimeException("Empty Sequence");
         }
 
-        int res = this.head.value;
+        Type res = this.head.value;
         this.head = this.head.next;
 
         if (this.isEmpty()) {
@@ -54,8 +54,8 @@ public class LinkedList implements Sequence {
 
     public String toString() {
         StringBuilder out = new StringBuilder("[");
-        Link c = this.head;
-        int val;
+        Link<Type> c = this.head;
+        Type val;
         while (c != null) {
             val = c.value;
             out.append(val);
@@ -70,7 +70,7 @@ public class LinkedList implements Sequence {
         return out.toString();
     }
 
-    public LinkedListIterator iterator() {
-        return new LinkedListIterator(this);
+    public LinkedListIterator<Type> iterator() {
+        return new LinkedListIterator<>(this);
     }
 }

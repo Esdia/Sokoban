@@ -1,7 +1,7 @@
 package esdia.sokoban.sequences;
 
 public class TestSequence {
-    static void test_seq(Sequence s) {
+    static void test_seq(Sequence<Integer> s) {
         assert s.isEmpty();
 
         for (int i = 49; i >= 0; i--) {
@@ -31,9 +31,9 @@ public class TestSequence {
     }
 
     public static void main(String[] args) {
-        Sequence s = new LinkedList();
+        Sequence<Integer> s = new LinkedList<>();
         test_seq(s);
-        s = new TableSequence();
+        s = new TableSequence<>();
         test_seq(s);
     }
 }
