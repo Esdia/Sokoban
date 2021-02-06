@@ -75,6 +75,6 @@ public class TableSequence implements Sequence {
 
     @Override
     public Iterator iterator() {
-        return null;
+        return new TableSequenceIterator(this);
     }
 }
