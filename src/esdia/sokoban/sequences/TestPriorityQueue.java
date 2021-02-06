@@ -3,17 +3,19 @@ package esdia.sokoban.sequences;
 import java.util.Random;
 
 public class TestPriorityQueue {
-    static void test_priority(PriorityQueue<Integer> p) {
+    static void test_priority(PriorityQueue<Integer, Integer> p) {
         Random r = new Random();
         int max = 100, min = 0;
 
         assert p.isEmpty();
 
+        int n;
         for (int i = 0; i < 100; i++) {
-            p.insert(r.nextInt(max - min + 1) + min);
+            n = r.nextInt(max - min + 1) + min;
+            p.insert(n, n);
         }
 
-        int n = p.extract();
+        n = p.extract();
         int tmp;
         for (int i = 0; i < 99; i++) {
             tmp = p.extract();
@@ -27,7 +29,7 @@ public class TestPriorityQueue {
     }
 
     public static void main(String[] args) {
-        PriorityQueue<Integer> p = new PriorityQueueLinked<>();
+        PriorityQueue<Integer, Integer> p = new PriorityQueueLinked<>();
         test_priority(p);
         p = new PriorityQueueTable<>();
         test_priority(p);
