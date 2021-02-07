@@ -3,12 +3,12 @@ package esdia.sokoban.sequences;
 import java.util.NoSuchElementException;
 
 public class TableSequenceIterator<Type> implements Iterator<Type> {
-    TableSequence<Type> s;
-    int current;
+    private final TableSequence<Type> s;
+    private int current;
 
-    boolean can_delete;
+    private boolean can_delete;
 
-    public TableSequenceIterator(TableSequence<Type> s) {
+    TableSequenceIterator(TableSequence<Type> s) {
         this.s = s;
         this.current = 0;
         this.can_delete = false;

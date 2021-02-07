@@ -9,7 +9,7 @@ public class PriorityQueueLinked<V, P extends Comparable<P>> extends PriorityQue
     }
 
     @Override
-    public void insert(Couple<V, P> e) {
+    void insert(Couple<V, P> e) {
         if (this.isEmpty()) {
             this.s.insertHead(e);
             return;

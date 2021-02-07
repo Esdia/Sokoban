@@ -11,7 +11,7 @@ public class TableSequence<Type> implements Sequence<Type> {
         this.head = 0;
     }
 
-    public void resize() {
+    void resize() {
         Object[] new_table = new Object[2 * this.size];
 
         int size_bkp = this.size;

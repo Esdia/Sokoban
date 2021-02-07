@@ -10,7 +10,7 @@ public class PriorityQueueTable<V, P extends Comparable<P>> extends PriorityQueu
 
     @Override
     @SuppressWarnings("unchecked")
-    public void insert(Couple<V, P> e) {
+    void insert(Couple<V, P> e) {
         if (this.isEmpty()) {
             this.s.insertHead(e);
             return;
