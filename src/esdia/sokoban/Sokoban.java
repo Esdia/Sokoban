@@ -7,23 +7,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Sokoban {
-    public static void main(String[] args) {
-        if (args.length == 0) {
-            System.err.println("ERROR : Please specify a file with levels");
-            return;
-        }
-
+    static InputStream get_input_stream(String filename) {
         File f;
         InputStream in;
 
         try {
-            f = new File(args[0]);
+            f = new File(filename);
             in = new FileInputStream(f);
         } catch (FileNotFoundException e) {
-            System.err.println("ERROR : cannot open '" + args[0] + "'");
-            return;
+            System.err.println("ERROR : cannot open '" + filename + "'");
+            in = null;
         }
 
+        return in;
+    }
+
+    static ArrayList<Level> load_levels(InputStream in) {
         LevelReader lr = new LevelReader(in);
         ArrayList<Level> levels = new ArrayList<>();
 
@@ -34,6 +33,22 @@ public class Sokoban {
         }
 
         lr.close();
+
+        return levels;
+    }
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println("ERROR : Please specify a file with levels");
+            return;
+        }
+
+        InputStream in = get_input_stream(args[0]);
+        if (in == null) {
+            return;
+        }
+
+        ArrayList<Level> levels = load_levels(in);
 
         for (Level level : levels) {
             level.print();
