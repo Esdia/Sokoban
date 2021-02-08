@@ -11,9 +11,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Configuration {
     private static Configuration config = null;
+    private static Logger logger = null;
 
     private final Properties properties;
 
@@ -96,5 +99,14 @@ public class Configuration {
             case "LinkedList" -> new LinkedList<>();
             default -> throw new NoSuchElementException("Invalid sequence type");
         };
+    }
+
+    @SuppressWarnings("unused")
+    public Logger get_logger() {
+        if (logger == null) {
+            logger = Logger.getLogger("Sokoban.Logger");
+            logger.setLevel(Level.parse(this.get("LogLevel")));
+        }
+        return logger;
     }
 }
