@@ -47,11 +47,11 @@ public class Configuration {
     }
 
     private static Properties load_properties() {
-        String default_prop = "default.cfg";
+        String default_prop = "/config/default.cfg";
         String prop_file = System.getProperty("user.home") + "/.sokoban";
         InputStream in;
 
-        in = Sokoban.class.getResourceAsStream(default_prop);
+        in = Configuration.class.getResourceAsStream(default_prop);
         Properties default_properties = new Properties();
         properties_from_file(in, default_properties);
 
