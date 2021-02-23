@@ -58,6 +58,5 @@ public class Sokoban {
             level.print();
             System.out.println();
         }
-
     }
 }
