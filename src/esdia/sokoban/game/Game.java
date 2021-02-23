@@ -13,7 +13,11 @@ public class Game {
     }
 
     public boolean nextLevel() {
-        this.currentLevel = this.reader.read();
-        return this.currentLevel != null;
+        Level tmp = this.reader.read();
+        if (tmp == null) {
+            return false;
+        }
+        this.currentLevel = tmp;
+        return true;
     }
 }
