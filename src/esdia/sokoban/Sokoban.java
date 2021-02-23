@@ -2,7 +2,6 @@ package esdia.sokoban;
 
 import esdia.sokoban.game.Game;
 import esdia.sokoban.game.LevelReader;
-import esdia.sokoban.global.Configuration;
 import esdia.sokoban.ui.MainWindow;
 
 import java.io.File;
@@ -31,8 +30,6 @@ public class Sokoban {
             System.err.println("ERROR : Please specify a file with levels");
             return;
         }
-
-        Configuration config = Configuration.instance();
 
         InputStream in = get_input_stream(args[0]);
         if (in == null) {
