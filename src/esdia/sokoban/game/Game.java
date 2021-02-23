@@ -1,4 +1,4 @@
-package esdia.sokoban;
+package esdia.sokoban.game;
 
 public class Game {
     private Level currentLevel = null;

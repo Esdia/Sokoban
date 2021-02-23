@@ -1,4 +1,4 @@
-package esdia.sokoban;
+package esdia.sokoban.game;
 
 import java.io.InputStream;
 import java.util.InputMismatchException;
