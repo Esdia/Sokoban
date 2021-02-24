@@ -52,8 +52,12 @@ public class LevelUI extends JComponent {
         return null;
     }
 
+    private int getImgSize(Level l) {
+        return Math.min(getWidth() / l.columns(), getHeight() / l.lines());
+    }
+
     private void fillWithGround(Graphics2D drawable) {
-        int img_size = 64;
+        int img_size = this.getImgSize(this.game.getCurrentLevel());
 
         int x_start = ((getWidth() / 2) - (img_size / 2)) % img_size - img_size;
         int x = x_start;
@@ -82,7 +86,7 @@ public class LevelUI extends JComponent {
 
         Level l = this.game.getCurrentLevel();
 
-        int img_size = 64;
+        int img_size = getImgSize(l);
 
         int x_start = width / 2 - (l.columns() * img_size / 2);
         int y_start = height / 2 - (l.lines() * img_size / 2);

@@ -34,7 +34,7 @@ public class MainWindow implements Runnable {
                 actionEvent -> toggleFullscreen(), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), JComponent.WHEN_IN_FOCUSED_WINDOW
         );
 
-        frame.setSize(1300, 1000);
+        frame.setSize(1280, 720);
         frame.setVisible(true);
     }
 
