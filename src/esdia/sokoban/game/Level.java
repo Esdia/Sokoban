@@ -58,6 +58,23 @@ public class Level {
     public boolean isPlayerOnGoal(int i, int j) { return this.grid[i][j] == PLAYER_ON_GOAL; }
     public boolean isBoxOnGoal(int i, int j) { return this.grid[i][j] == BOX_ON_GOAL; }
 
+    public boolean isInGrid(int x, int y) {
+        return 0 <= x && x < this.columns() && 0 <= y && y < this.lines();
+    }
+
+    public boolean isNextToPlayer(int x, int y) {
+        if (this.isInGrid(x, y + 1) && this.isPlayer(y + 1, x)) {
+            return true;
+        } else if (this.isInGrid(x, y - 1) && this.isPlayer(y - 1, x)) {
+            return true;
+        } else if (this.isInGrid(x + 1, y) && this.isPlayer(y, x + 1)) {
+            return true;
+        } else {
+            return this.isInGrid(x - 1, y) && this.isPlayer(y, x - 1);
+        }
+
+    }
+
     public void print() {
         char c;
 
