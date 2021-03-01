@@ -5,10 +5,10 @@ import esdia.sokoban.global.Configuration;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SokobanMouse extends MouseAdapter {
+public class Mouse extends MouseAdapter {
     LevelUI l;
 
-    public SokobanMouse(LevelUI l) {
+    public Mouse(LevelUI l) {
         this.l = l;
     }
 

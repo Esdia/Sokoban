@@ -4,7 +4,6 @@ import esdia.sokoban.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class MainWindow implements Runnable {
     Game game;
@@ -21,7 +20,7 @@ public class MainWindow implements Runnable {
         LevelUI l = new LevelUI(this.game);
 
         frame.add(l);
-        l.addMouseListener(new SokobanMouse(l));
+        l.addMouseListener(new Mouse(l));
 
         frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
