@@ -26,20 +26,7 @@ public class MainWindow implements Runnable {
         frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frame.getRootPane().registerKeyboardAction(
-                actionEvent -> {
-                    if (game.nextLevel()) {
-                        frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
-                        frame.repaint();
-                    }
-                },
-                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                JComponent.WHEN_IN_FOCUSED_WINDOW
-        );
-
-        frame.getRootPane().registerKeyboardAction(
-                actionEvent -> toggleFullscreen(), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), JComponent.WHEN_IN_FOCUSED_WINDOW
-        );
+        frame.addKeyListener(new Keyboard(this));
 
         frame.setSize(1280, 720);
         frame.setVisible(true);
