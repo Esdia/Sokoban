@@ -13,6 +13,8 @@ import java.io.InputStream;
 
 public class LevelUI extends JComponent {
     private final Game game;
+
+    private int imgSize;
     BufferedImage empty, wall, player, box, goal, boxOnGoal;
 
     private BufferedImage loadImg(String name) {
@@ -57,39 +59,37 @@ public class LevelUI extends JComponent {
     }
 
     private void fillWithGround(Graphics2D drawable) {
-        int img_size = this.getImgSize(this.game.getCurrentLevel());
-
-        int x_start = ((getWidth() / 2) - (img_size / 2)) % img_size - img_size;
+        int x_start = ((getWidth() / 2) - (this.imgSize / 2)) % this.imgSize - this.imgSize;
         int x = x_start;
-        int y = ((getHeight() / 2) - (img_size / 2)) % img_size - img_size;
+        int y = ((getHeight() / 2) - (this.imgSize / 2)) % this.imgSize - this.imgSize;
 
         while (y < getHeight()) {
             while (x < getWidth()) {
-                drawable.drawImage(this.empty, x, y, img_size, img_size, null);
-                x += img_size;
+                drawable.drawImage(this.empty, x, y, this.imgSize, this.imgSize, null);
+                x += this.imgSize;
             }
             x = x_start;
-            y += img_size;
+            y += this.imgSize;
         }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
+        Level l = this.game.getCurrentLevel();
 
         int width = getWidth();
         int height = getHeight();
 
         drawable.clearRect(0, 0, width, height);
 
+        this.imgSize = getImgSize(l);
+
         this.fillWithGround(drawable);
 
-        Level l = this.game.getCurrentLevel();
 
-        int img_size = getImgSize(l);
-
-        int x_start = width / 2 - (l.columns() * img_size / 2);
-        int y_start = height / 2 - (l.lines() * img_size / 2);
+        int x_start = width / 2 - (l.columns() * imgSize / 2);
+        int y_start = height / 2 - (l.lines() * imgSize / 2);
 
         int x = x_start;
         int y = y_start;
@@ -99,12 +99,12 @@ public class LevelUI extends JComponent {
             for (int j = 0; j < l.columns(); j++) {
                 img = this.selectImage(l, i, j);
                 if (img != null) {
-                    drawable.drawImage(img, x, y, img_size, img_size, null);
-                    x += img_size;
+                    drawable.drawImage(img, x, y, imgSize, imgSize, null);
+                    x += imgSize;
                 }
             }
             x = x_start;
-            y += img_size;
+            y += imgSize;
         }
     }
 }
