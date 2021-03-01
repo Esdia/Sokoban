@@ -1,5 +1,7 @@
 package esdia.sokoban.game;
 
+import esdia.sokoban.global.Configuration;
+
 public class Game {
     private Level currentLevel = null;
     private final LevelReader reader;
@@ -18,6 +20,11 @@ public class Game {
             return false;
         }
         this.currentLevel = tmp;
+
+        Configuration.instance().get_logger().info(
+                "Loading level : " + tmp.name() + "\n" + tmp.toString()
+        );
+
         return true;
     }
 }
