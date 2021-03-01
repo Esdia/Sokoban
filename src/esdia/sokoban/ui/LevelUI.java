@@ -17,6 +17,9 @@ public class LevelUI extends JComponent {
     private int imgSize;
     BufferedImage empty, wall, player, box, goal, boxOnGoal;
 
+    private int topLeftX;
+    private int topLeftY;
+
     private BufferedImage loadImg(String name) {
         InputStream in = LevelUI.class.getResourceAsStream("/images/" + name);
         try {
@@ -73,6 +76,17 @@ public class LevelUI extends JComponent {
         }
     }
 
+    public int coordToIndex(int coord, int offset) {
+        return (coord - offset) / this.imgSize;
+    }
+
+    public boolean isNextToPlayer(int x, int y) {
+        x = this.coordToIndex(x, this.topLeftX);
+        y = this.coordToIndex(y, this.topLeftY);
+
+        return this.game.getCurrentLevel().isNextToPlayer(x, y);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
@@ -93,6 +107,9 @@ public class LevelUI extends JComponent {
 
         int x = x_start;
         int y = y_start;
+
+        this.topLeftX = x_start;
+        this.topLeftY = y_start;
 
         BufferedImage img;
         for (int i = 0; i < l.lines(); i++) {
