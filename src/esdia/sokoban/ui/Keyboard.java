@@ -30,6 +30,11 @@ public class Keyboard extends KeyAdapter {
                 if (this.window.game.nextLevel()) {
                     this.window.frame.setTitle("Sokoban - Level " + this.window.game.getCurrentLevel().name());
                     this.window.frame.repaint();
+                } else {
+                    Configuration.instance().get_logger().info(
+                            "No next level : shutting down"
+                    );
+                    this.window.shutdown();
                 }
             }
 

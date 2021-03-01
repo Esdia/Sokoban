@@ -5,6 +5,7 @@ import esdia.sokoban.global.Configuration;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 public class MainWindow implements Runnable {
     Game game;
@@ -46,6 +47,17 @@ public class MainWindow implements Runnable {
             device.setFullScreenWindow(this.frame);
             maximized = true;
         }
+    }
+
+    public void shutdown() {
+        this.game.closeReader();
+
+        Configuration.instance().get_logger().info(
+                "Closing the window"
+        );
+        this.frame.dispatchEvent(
+                new WindowEvent(this.frame, WindowEvent.WINDOW_CLOSING)
+        );
     }
 
     public static void start(Game game) {

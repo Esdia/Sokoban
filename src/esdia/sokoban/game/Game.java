@@ -27,4 +27,11 @@ public class Game {
 
         return true;
     }
+
+    public void closeReader() {
+        Configuration.instance().get_logger().info(
+                "Closing the level reader"
+        );
+        this.reader.close();
+    }
 }
