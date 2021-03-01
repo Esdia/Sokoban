@@ -75,7 +75,9 @@ public class Level {
 
     }
 
-    public void print() {
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
         char c;
 
         for (int i = 0; i < lines(); i++) {
@@ -89,12 +91,16 @@ public class Level {
                     case BOX_ON_GOAL -> c = '*';
                     default -> c = ' ';
                 }
-                System.out.print(c);
+                s.append(c);
             }
-            System.out.println();
+            s.append('\n');
         }
-        if (name() != null) {
-            System.out.println("; " + name());
-        }
+
+        return s.toString();
+    }
+
+    @SuppressWarnings("unused")
+    public void print() {
+        System.out.println(this.toString());
     }
 }
