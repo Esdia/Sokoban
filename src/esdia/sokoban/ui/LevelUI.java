@@ -21,6 +21,9 @@ public class LevelUI extends JComponent {
     private int topLeftY;
 
     private BufferedImage loadImg(String name) {
+        Configuration.instance().get_logger().info(
+                "Logging image : " + name
+        );
         InputStream in = LevelUI.class.getResourceAsStream("/images/" + name);
         try {
             return ImageIO.read(in);
@@ -89,6 +92,9 @@ public class LevelUI extends JComponent {
 
     @Override
     public void paintComponent(Graphics g) {
+        Configuration.instance().get_logger().info(
+                "Repainting window"
+        );
         Graphics2D drawable = (Graphics2D) g;
         Level l = this.game.getCurrentLevel();
 

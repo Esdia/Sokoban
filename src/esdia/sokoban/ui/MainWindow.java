@@ -1,6 +1,7 @@
 package esdia.sokoban.ui;
 
 import esdia.sokoban.game.Game;
+import esdia.sokoban.global.Configuration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,10 @@ public class MainWindow implements Runnable {
     }
 
     public void toggleFullscreen() {
+        Configuration.instance().get_logger().info(
+                "Toggling fullscreen"
+        );
+
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = env.getDefaultScreenDevice();
         if (maximized) {

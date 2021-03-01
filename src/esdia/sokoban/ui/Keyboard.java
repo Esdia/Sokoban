@@ -24,6 +24,9 @@ public class Keyboard extends KeyAdapter {
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER -> {
+                Configuration.instance().get_logger().info(
+                        "Skipping level"
+                );
                 if (this.window.game.nextLevel()) {
                     this.window.frame.setTitle("Sokoban - Level " + this.window.game.getCurrentLevel().name());
                     this.window.frame.repaint();
