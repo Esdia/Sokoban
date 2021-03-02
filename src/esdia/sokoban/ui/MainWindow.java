@@ -20,14 +20,15 @@ public class MainWindow implements Runnable {
     @Override
     public void run() {
         LevelUI l = new LevelUI(this.game);
+        game.addLevelUi(l);
 
         frame.add(l);
-        l.addMouseListener(new Mouse(l));
 
         frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frame.addKeyListener(new Keyboard(this, l));
+        l.addMouseListener(new Mouse(this));
+        frame.addKeyListener(new Keyboard(this));
 
         frame.setSize(1280, 720);
         frame.setVisible(true);

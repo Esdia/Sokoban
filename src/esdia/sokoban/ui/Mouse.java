@@ -6,10 +6,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Mouse extends MouseAdapter {
-    LevelUI l;
+    MainWindow window;
 
-    public Mouse(LevelUI l) {
-        this.l = l;
+    public Mouse(MainWindow window) {
+        this.window = window;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class Mouse extends MouseAdapter {
                 "Mouse click on (" + x + ", " + y + ")"
         );
 
-        l.moveTo(x, y);
+        this.window.game.moveTo(x, y);
     }
 }

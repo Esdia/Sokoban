@@ -7,11 +7,9 @@ import java.awt.event.KeyEvent;
 
 public class Keyboard extends KeyAdapter {
     MainWindow window;
-    LevelUI levelUI;
 
-    public Keyboard(MainWindow window, LevelUI levelUI) {
+    public Keyboard(MainWindow window) {
         this.window = window;
-        this.levelUI = levelUI;
     }
 
     private void log(int code) {
@@ -42,10 +40,10 @@ public class Keyboard extends KeyAdapter {
 
             case KeyEvent.VK_F11 -> this.window.toggleFullscreen();
 
-            case KeyEvent.VK_UP -> levelUI.moveUp();
-            case KeyEvent.VK_DOWN -> levelUI.moveDown();
-            case KeyEvent.VK_LEFT -> levelUI.moveLeft();
-            case KeyEvent.VK_RIGHT -> levelUI.moveRight();
+            case KeyEvent.VK_UP -> this.window.game.moveUp();
+            case KeyEvent.VK_DOWN -> this.window.game.moveDown();
+            case KeyEvent.VK_LEFT -> this.window.game.moveLeft();
+            case KeyEvent.VK_RIGHT -> this.window.game.moveRight();
         }
     }
 }

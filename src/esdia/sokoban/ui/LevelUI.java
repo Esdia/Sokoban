@@ -79,33 +79,12 @@ public class LevelUI extends JComponent {
         }
     }
 
-    public int coordToIndex(int coord, int offset) {
-        return (coord - offset) / this.imgSize;
+    public int coordToIndexX(int x) {
+        return (x - this.topLeftX) / this.imgSize;
     }
 
-    public void moveTo(int x, int y) {
-        x = this.coordToIndex(x, this.topLeftX);
-        y = this.coordToIndex(y, this.topLeftY);
-
-        this.game.getCurrentLevel().moveClick(x, y);
-        this.repaint();
-    }
-
-    public void moveUp() {
-        this.game.getCurrentLevel().moveUp();
-        this.repaint();
-    }
-    public void moveDown() {
-        this.game.getCurrentLevel().moveDown();
-        this.repaint();
-    }
-    public void moveLeft() {
-        this.game.getCurrentLevel().moveLeft();
-        this.repaint();
-    }
-    public void moveRight() {
-        this.game.getCurrentLevel().moveRight();
-        this.repaint();
+    public int coordToIndexY(int y) {
+        return (y - this.topLeftY) / this.imgSize;
     }
 
     @Override
