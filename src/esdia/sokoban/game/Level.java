@@ -82,11 +82,11 @@ public class Level {
     public boolean isPlayerOnGoal(int i, int j) { return this.grid[i][j] == PLAYER_ON_GOAL; }
     public boolean isBoxOnGoal(int i, int j) { return this.grid[i][j] == BOX_ON_GOAL; }
 
-    public boolean isNotInGrid(int i, int j) {
+    private boolean isNotInGrid(int i, int j) {
         return 0 > i || i >= this.lines() || 0 > j || j >= this.columns();
     }
 
-    public boolean isNextToPlayer(int i, int j) {
+    private boolean isNextToPlayer(int i, int j) {
         if (Math.abs(i - this.playerI) == 1 && j == this.playerJ) {
             return true;
         }
@@ -105,7 +105,7 @@ public class Level {
      * If P represents the tile the player is on, this method returns a valid
      * direction if and only if (i, j) is a tile marked by an 'O'
      */
-    public int getMovingDirection(int i, int j) {
+    private int getMovingDirection(int i, int j) {
         if (!this.isNextToPlayer(i, j)) {
             return UNDEFINED;
         }
@@ -126,7 +126,7 @@ public class Level {
         return UNDEFINED;
     }
 
-    public boolean canMoveBoxTo(int i, int j) {
+    private boolean canMoveBoxTo(int i, int j) {
         if (this.isNotInGrid(i, j)) {
             return false;
         }
@@ -135,7 +135,7 @@ public class Level {
 
     }
 
-    public boolean canMoveTo(int i, int j) {
+    private boolean canMoveTo(int i, int j) {
         if (this.isNotInGrid(i, j)) {
             return false;
         }
@@ -143,7 +143,26 @@ public class Level {
         return this.isEmpty(i, j) || this.isGoal(i, j) || this.isBox(i, j) || this.isBoxOnGoal(i, j);
     }
 
-    public void move(int offsetI, int offsetJ) {
+    // Returns true if the box moved (i.e. was not blocked by a wall or another box
+    private boolean moveBox(int offsetI, int offsetJ, int iStart, int jStart) {
+        int iDest = iStart + offsetI;
+        int jDest = jStart + offsetJ;
+
+        if (!this.canMoveBoxTo(iDest, jDest)) {
+            return false;
+        }
+
+        if (this.isGoal(iDest, jDest)) {
+            this.addBoxOnGoal(iDest, jDest);
+        } else {
+            this.addBox(iDest, jDest);
+        }
+
+        this.leaveSquare(iStart, jStart);
+        return true;
+    }
+
+    private void move(int offsetI, int offsetJ) {
         int iStart = this.playerI;
         int jStart = this.playerJ;
 
@@ -155,20 +174,7 @@ public class Level {
         }
 
         if (this.isBox(iDest, jDest) || isBoxOnGoal(iDest, jDest)) {
-            int iBoxDest = iDest + offsetI;
-            int jBoxDest = jDest + offsetJ;
-
-            if (!this.canMoveBoxTo(iBoxDest, jBoxDest)) {
-                return;
-            }
-
-            if (this.isGoal(iBoxDest, jBoxDest)) {
-                this.addBoxOnGoal(iBoxDest, jBoxDest);
-            } else {
-                this.addBox(iBoxDest, jBoxDest);
-            }
-
-            this.leaveSquare(iDest, jDest);
+            if (!moveBox(offsetI, offsetJ, iDest, jDest)) return;
         }
 
         if (this.isGoal(iDest, jDest)) {
