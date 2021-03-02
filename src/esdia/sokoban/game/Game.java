@@ -2,18 +2,21 @@ package esdia.sokoban.game;
 
 import esdia.sokoban.global.Configuration;
 import esdia.sokoban.ui.LevelUI;
+import esdia.sokoban.ui.MainWindow;
 
 public class Game {
     private Level currentLevel = null;
     private final LevelReader reader;
 
+    private MainWindow window = null;
     private LevelUI levelUI = null;
 
     public Game(LevelReader reader) {
         this.reader = reader;
     }
 
-    public void addLevelUi(LevelUI levelUI) {
+    public void setupUI(MainWindow window, LevelUI levelUI) {
+        this.window = window;
         this.levelUI = levelUI;
     }
 
@@ -42,21 +45,47 @@ public class Game {
         this.reader.close();
     }
 
+    public void loadNextLevel() {
+        if (this.nextLevel()) {
+            this.window.getFrame().setTitle("Sokoban - Level " + this.getCurrentLevel().name());
+        } else {
+            Configuration.instance().get_logger().info(
+                    "No next level : shutting down"
+            );
+            this.window.shutdown();
+        }
+    }
+
+    public void skipLevel() {
+        Configuration.instance().get_logger().info(
+                "Skipping level"
+        );
+        this.loadNextLevel();
+        this.levelUI.repaint();
+    }
+
+    public void checkAfter() {
+        if (this.getCurrentLevel().isComplete()) {
+            this.loadNextLevel();
+        }
+        this.levelUI.repaint();
+    }
+
     public void moveUp() {
         this.getCurrentLevel().moveUp();
-        this.levelUI.repaint();
+        this.checkAfter();
     }
     public void moveDown() {
         this.getCurrentLevel().moveDown();
-        this.levelUI.repaint();
+        this.checkAfter();
     }
     public void moveLeft() {
         this.getCurrentLevel().moveLeft();
-        this.levelUI.repaint();
+        this.checkAfter();
     }
     public void moveRight() {
         this.getCurrentLevel().moveRight();
-        this.levelUI.repaint();
+        this.checkAfter();
     }
 
     public void moveTo(int x, int y) {
@@ -64,6 +93,6 @@ public class Game {
         y = this.levelUI.coordToIndexY(y);
 
         this.getCurrentLevel().moveClick(x, y);
-        this.levelUI.repaint();
+        this.checkAfter();
     }
 }
