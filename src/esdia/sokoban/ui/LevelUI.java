@@ -91,6 +91,23 @@ public class LevelUI extends JComponent {
         this.repaint();
     }
 
+    public void moveUp() {
+        this.game.getCurrentLevel().moveUp();
+        this.repaint();
+    }
+    public void moveDown() {
+        this.game.getCurrentLevel().moveDown();
+        this.repaint();
+    }
+    public void moveLeft() {
+        this.game.getCurrentLevel().moveLeft();
+        this.repaint();
+    }
+    public void moveRight() {
+        this.game.getCurrentLevel().moveRight();
+        this.repaint();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         Configuration.instance().get_logger().info(
