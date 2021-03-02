@@ -31,6 +31,8 @@ public class Keyboard extends KeyAdapter {
             case KeyEvent.VK_DOWN, KeyEvent.VK_S -> this.window.game.moveDown();
             case KeyEvent.VK_LEFT, KeyEvent.VK_Q -> this.window.game.moveLeft();
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> this.window.game.moveRight();
+
+            case KeyEvent.VK_ESCAPE -> this.window.shutdown();
         }
     }
 }
