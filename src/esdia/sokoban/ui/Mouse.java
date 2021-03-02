@@ -21,6 +21,6 @@ public class Mouse extends MouseAdapter {
                 "Mouse click on (" + x + ", " + y + ")"
         );
 
-        boolean res = l.isNextToPlayer(x, y);
+        l.moveTo(x, y);
     }
 }

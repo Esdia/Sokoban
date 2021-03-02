@@ -83,11 +83,12 @@ public class LevelUI extends JComponent {
         return (coord - offset) / this.imgSize;
     }
 
-    public boolean isNextToPlayer(int x, int y) {
+    public void moveTo(int x, int y) {
         x = this.coordToIndex(x, this.topLeftX);
         y = this.coordToIndex(y, this.topLeftY);
 
-        return this.game.getCurrentLevel().isNextToPlayer(x, y);
+        this.game.getCurrentLevel().moveClick(x, y);
+        this.repaint();
     }
 
     @Override
