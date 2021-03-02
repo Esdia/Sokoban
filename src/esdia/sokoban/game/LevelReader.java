@@ -41,7 +41,10 @@ public class LevelReader {
                                 case '+' -> l.addPlayerOnGoal(i, j);
                                 case '$' -> l.addBox(i, j);
                                 case '*' -> l.addBoxOnGoal(i, j);
-                                case '.' -> l.addGoal(i, j);
+                                case '.' -> {
+                                    l.addGoal(i, j);
+                                    l.nbGoals++;
+                                }
                                 default -> { return null; }
                             }
                         }

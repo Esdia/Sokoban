@@ -20,7 +20,7 @@ public class MainWindow implements Runnable {
     @Override
     public void run() {
         LevelUI l = new LevelUI(this.game);
-        game.addLevelUi(l);
+        game.setupUI(this, l);
 
         frame.add(l);
 
@@ -32,6 +32,10 @@ public class MainWindow implements Runnable {
 
         frame.setSize(1280, 720);
         frame.setVisible(true);
+    }
+
+    public Frame getFrame() {
+        return this.frame;
     }
 
     public void toggleFullscreen() {

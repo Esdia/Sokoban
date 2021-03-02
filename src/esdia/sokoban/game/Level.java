@@ -20,6 +20,9 @@ public class Level {
     private int playerI;
     private int playerJ;
 
+    int nbGoals;
+    private int nbBoxesOnGoal;
+
     private int[][] grid;
     private int l, c;
 
@@ -30,6 +33,8 @@ public class Level {
         this.c = 0;
         this.name = null;
         this.grid = new int[0][0];
+        this.nbGoals = 0;
+        this.nbBoxesOnGoal = 0;
     }
 
     void resize_grid(int new_l, int new_c) {
@@ -60,10 +65,13 @@ public class Level {
     void addBox(int i, int j) { this.grid[i][j] = BOX; }
     void addGoal(int i, int j) { this.grid[i][j] = GOAL; }
     void addPlayerOnGoal(int i, int j) { this.grid[i][j] = PLAYER_ON_GOAL; this.setPlayerCoords(i, j); }
-    void addBoxOnGoal(int i, int j) { this.grid[i][j] = BOX_ON_GOAL; }
+    void addBoxOnGoal(int i, int j) { this.grid[i][j] = BOX_ON_GOAL; this.nbBoxesOnGoal++; }
 
     void leaveSquare(int i, int j) {
-        if (this.isPlayerOnGoal(i, j) || this.isBoxOnGoal(i, j)) {
+        if (this.isBoxOnGoal(i, j)) {
+            this.nbBoxesOnGoal--;
+            this.addGoal(i, j);
+        } else if (this.isPlayerOnGoal(i, j)) {
             this.addGoal(i, j);
         } else {
             this.emptySquare(i, j);
@@ -81,6 +89,10 @@ public class Level {
     public boolean isGoal(int i, int j) { return this.grid[i][j] == GOAL; }
     public boolean isPlayerOnGoal(int i, int j) { return this.grid[i][j] == PLAYER_ON_GOAL; }
     public boolean isBoxOnGoal(int i, int j) { return this.grid[i][j] == BOX_ON_GOAL; }
+
+    public boolean isComplete() {
+        return this.nbBoxesOnGoal == this.nbGoals;
+    }
 
     private boolean isNotInGrid(int i, int j) {
         return 0 > i || i >= this.lines() || 0 > j || j >= this.columns();
