@@ -1,6 +1,5 @@
 package esdia.sokoban.ui;
 
-import esdia.sokoban.game.Level;
 import esdia.sokoban.global.Configuration;
 
 import java.awt.event.KeyAdapter;
