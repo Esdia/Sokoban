@@ -62,6 +62,14 @@ public class Level {
     void addPlayerOnGoal(int i, int j) { this.grid[i][j] = PLAYER_ON_GOAL; this.setPlayerCoords(i, j); }
     void addBoxOnGoal(int i, int j) { this.grid[i][j] = BOX_ON_GOAL; }
 
+    void leaveSquare(int i, int j) {
+        if (this.isPlayerOnGoal(i, j) || this.isBoxOnGoal(i, j)) {
+            this.addGoal(i, j);
+        } else {
+            this.emptySquare(i, j);
+        }
+    }
+
     public int lines() { return this.l; }
     public int columns() { return this.c; }
     public String name() { return this.name; }
@@ -159,6 +167,8 @@ public class Level {
             } else {
                 this.addBox(iBoxDest, jBoxDest);
             }
+
+            this.leaveSquare(iDest, jDest);
         }
 
         if (this.isGoal(iDest, jDest)) {
@@ -167,11 +177,7 @@ public class Level {
             this.addPlayer(iDest, jDest);
         }
 
-        if (this.isPlayerOnGoal(iStart, jStart)) {
-            this.addGoal(iStart, jStart);
-        } else {
-            this.emptySquare(iStart, jStart);
-        }
+        this.leaveSquare(iStart, jStart);
     }
 
     public void moveUp() {
