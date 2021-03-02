@@ -117,11 +117,14 @@ public class LevelUI extends JComponent {
         BufferedImage img;
         for (int i = 0; i < l.lines(); i++) {
             for (int j = 0; j < l.columns(); j++) {
-                img = this.selectImage(l, i, j);
-                if (img != null) {
+                if (l.isPlayerOnGoal(i, j)) {
+                    drawable.drawImage(goal, x, y, imgSize, imgSize, null);
+                    drawable.drawImage(player, x, y, imgSize, imgSize, null);
+                } else {
+                    img = this.selectImage(l, i, j);
                     drawable.drawImage(img, x, y, imgSize, imgSize, null);
-                    x += imgSize;
                 }
+                x += imgSize;
             }
             x = x_start;
             y += imgSize;
