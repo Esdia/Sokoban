@@ -27,10 +27,10 @@ public class Keyboard extends KeyAdapter {
 
             case KeyEvent.VK_F11 -> this.window.toggleFullscreen();
 
-            case KeyEvent.VK_UP -> this.window.game.moveUp();
-            case KeyEvent.VK_DOWN -> this.window.game.moveDown();
-            case KeyEvent.VK_LEFT -> this.window.game.moveLeft();
-            case KeyEvent.VK_RIGHT -> this.window.game.moveRight();
+            case KeyEvent.VK_UP, KeyEvent.VK_Z -> this.window.game.moveUp();
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> this.window.game.moveDown();
+            case KeyEvent.VK_LEFT, KeyEvent.VK_Q -> this.window.game.moveLeft();
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> this.window.game.moveRight();
         }
     }
 }
