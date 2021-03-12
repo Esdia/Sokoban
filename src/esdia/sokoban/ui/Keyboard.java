@@ -12,15 +12,11 @@ public class Keyboard extends KeyAdapter {
         this.window = window;
     }
 
-    private void log(int code) {
-        Configuration.instance().get_logger().info(
-                "Key pressed : " + code
-        );
-    }
-
     @Override
     public void keyPressed(KeyEvent e) {
-        this.log(e.getKeyCode());
+        Configuration.instance().get_logger().info(
+                "Key pressed : " + KeyEvent.getKeyText(e.getKeyCode())
+        );
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER -> this.window.game.skipLevel();
