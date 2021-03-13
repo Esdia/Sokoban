@@ -6,4 +6,4 @@ This is a Sokoban implementation in Java for school.
 
 This project must be compiled with Java 13 or newer because it uses enhanced switches.
 
-### Status : Step 07 done
+### Status : Step 08 done
