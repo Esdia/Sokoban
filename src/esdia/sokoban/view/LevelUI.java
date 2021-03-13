@@ -65,9 +65,9 @@ public class LevelUI extends JComponent {
     }
 
     private void fillWithGround(Graphics2D drawable) {
-        int x_start = ((getWidth() / 2) - (this.imgSize / 2)) % this.imgSize - this.imgSize;
+        int x_start = this.topLeftX % this.imgSize - this.imgSize;
         int x = x_start;
-        int y = ((getHeight() / 2) - (this.imgSize / 2)) % this.imgSize - this.imgSize;
+        int y = this.topLeftY % this.imgSize - this.imgSize;
 
         while (y < getHeight()) {
             while (x < getWidth()) {
@@ -102,8 +102,6 @@ public class LevelUI extends JComponent {
 
         this.imgSize = getImgSize(l);
 
-        this.fillWithGround(drawable);
-
 
         int x_start = width / 2 - (l.columns() * imgSize / 2);
         int y_start = height / 2 - (l.lines() * imgSize / 2);
@@ -113,6 +111,8 @@ public class LevelUI extends JComponent {
 
         this.topLeftX = x_start;
         this.topLeftY = y_start;
+
+        this.fillWithGround(drawable);
 
         BufferedImage img;
         for (int i = 0; i < l.lines(); i++) {
