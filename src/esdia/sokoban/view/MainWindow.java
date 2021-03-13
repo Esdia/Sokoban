@@ -1,7 +1,7 @@
-package esdia.sokoban.ui;
+package esdia.sokoban.view;
 
-import esdia.sokoban.game.Game;
 import esdia.sokoban.global.Configuration;
+import esdia.sokoban.model.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,32 +10,33 @@ import java.awt.event.WindowEvent;
 public class MainWindow implements Runnable {
     Game game;
     JFrame frame;
+    LevelUI levelUI;
+    EventListener controller;
     boolean maximized = false;
 
-    private MainWindow(Game game) {
+    private MainWindow(Game game, EventListener controller) {
         this.game = game;
+        this.levelUI = new LevelUI(this.game);
         this.frame = new JFrame();
+        this.controller = controller;
+    }
+
+    public void refreshFrameTitle() {
+        this.frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
     }
 
     @Override
     public void run() {
-        LevelUI l = new LevelUI(this.game);
-        game.setupUI(this, l);
+        frame.add(this.levelUI);
 
-        frame.add(l);
-
-        frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
+        this.refreshFrameTitle();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        l.addMouseListener(new Mouse(this));
-        frame.addKeyListener(new Keyboard(this));
+        this.levelUI.addMouseListener(this.controller);
+        this.frame.addKeyListener(this.controller);
 
         frame.setSize(1280, 720);
         frame.setVisible(true);
-    }
-
-    public Frame getFrame() {
-        return this.frame;
     }
 
     public void toggleFullscreen() {
@@ -54,6 +55,19 @@ public class MainWindow implements Runnable {
         }
     }
 
+    public int coordToIndexX(int x) {
+        return this.levelUI.coordToIndexX(x);
+    }
+
+    public int coordToIndexY(int y) {
+        return this.levelUI.coordToIndexY(y);
+    }
+
+    public void repaint() {
+        this.refreshFrameTitle();
+        this.levelUI.repaint();
+    }
+
     public void shutdown() {
         this.game.closeReader();
 
@@ -65,7 +79,9 @@ public class MainWindow implements Runnable {
         );
     }
 
-    public static void start(Game game) {
-        SwingUtilities.invokeLater(new MainWindow(game));
+    public static void start(Game game, EventListener gameController) {
+        MainWindow window = new MainWindow(game, gameController);
+        gameController.setWindow(window);
+        SwingUtilities.invokeLater(window);
     }
 }

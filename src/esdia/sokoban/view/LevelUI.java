@@ -1,7 +1,7 @@
-package esdia.sokoban.ui;
+package esdia.sokoban.view;
 
-import esdia.sokoban.game.Game;
-import esdia.sokoban.game.Level;
+import esdia.sokoban.model.Game;
+import esdia.sokoban.model.Level;
 import esdia.sokoban.global.Configuration;
 
 import javax.imageio.ImageIO;
@@ -19,6 +19,11 @@ public class LevelUI extends JComponent {
 
     private int topLeftX;
     private int topLeftY;
+
+    public LevelUI(Game game) {
+        this.game = game;
+        this.loadImgs();
+    }
 
     private BufferedImage loadImg(String name) {
         Configuration.instance().get_logger().info(
@@ -42,11 +47,6 @@ public class LevelUI extends JComponent {
         this.box = this.loadImg("box.png");
         this.goal = this.loadImg("goal.png");
         this.boxOnGoal = this.loadImg("box_on_goal.png");
-    }
-
-    public LevelUI(Game game) {
-        this.game = game;
-        this.loadImgs();
     }
 
     private BufferedImage selectImage(Level l, int i, int j) {

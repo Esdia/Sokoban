@@ -1,4 +1,4 @@
-package esdia.sokoban.game;
+package esdia.sokoban.model;
 
 public class Level {
     private static final int EMPTY = 0;

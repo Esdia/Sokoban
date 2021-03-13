@@ -1,8 +1,9 @@
 package esdia.sokoban;
 
-import esdia.sokoban.game.Game;
-import esdia.sokoban.game.LevelReader;
-import esdia.sokoban.ui.MainWindow;
+import esdia.sokoban.controller.GameController;
+import esdia.sokoban.model.Game;
+import esdia.sokoban.model.LevelReader;
+import esdia.sokoban.view.MainWindow;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,8 +38,10 @@ public class Sokoban {
         }
         Game game = new Game(new LevelReader(in));
 
+        GameController controller = new GameController(game);
+
         if (game.nextLevel()) {
-            MainWindow.start(game);
+            MainWindow.start(game, controller);
         }
     }
 }
