@@ -79,9 +79,14 @@ public class MainWindow implements Runnable {
         );
     }
 
+    public LevelUI getLevelUI() {
+        return this.levelUI;
+    }
+
     public static void start(Game game, EventListener gameController) {
         MainWindow window = new MainWindow(game, gameController);
         gameController.setWindow(window);
+        gameController.animationLoop();
         SwingUtilities.invokeLater(window);
     }
 }
