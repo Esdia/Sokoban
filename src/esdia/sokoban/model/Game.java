@@ -1,6 +1,7 @@
 package esdia.sokoban.model;
 
 import esdia.sokoban.global.Configuration;
+import esdia.sokoban.sequences.Sequence;
 
 public class Game {
     private Level currentLevel = null;
@@ -60,20 +61,15 @@ public class Game {
         return this.loadNextLevel();
     }
 
-    public void moveUp() {
-        this.getCurrentLevel().moveUp();
-    }
-    public void moveDown() {
-        this.getCurrentLevel().moveDown();
-    }
-    public void moveLeft() {
-        this.getCurrentLevel().moveLeft();
-    }
-    public void moveRight() {
-        this.getCurrentLevel().moveRight();
+    public Sequence<Movement> getMovements(Direction direction) {
+        return this.getCurrentLevel().getMovements(direction);
     }
 
-    public void moveTo(int x, int y) {
-        this.getCurrentLevel().moveClick(x, y);
+    public Sequence<Movement> getMovementsByClick(int i, int j) {
+        return this.getCurrentLevel().getMovementByClick(i, j);
+    }
+
+    public void applyMovements(Sequence<Movement> movements) {
+        this.getCurrentLevel().applyMovements(movements);
     }
 }

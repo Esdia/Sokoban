@@ -1,5 +1,9 @@
 package esdia.sokoban.model;
 
+import esdia.sokoban.global.Configuration;
+import esdia.sokoban.sequences.Iterator;
+import esdia.sokoban.sequences.Sequence;
+
 public class Level {
     private static final int EMPTY = 0;
     private static final int WALL = 1;
@@ -8,13 +12,6 @@ public class Level {
     private static final int GOAL = 4;
     private static final int PLAYER_ON_GOAL = 5;
     private static final int BOX_ON_GOAL = 6;
-
-    private static final int UP = 7;
-    private static final int DOWN = 8;
-    private static final int LEFT = 9;
-    private static final int RIGHT = 10;
-
-    private static final int UNDEFINED = 11;
 
     // The player's coordinates
     private int playerI;
@@ -117,25 +114,25 @@ public class Level {
      * If P represents the tile the player is on, this method returns a valid
      * direction if and only if (i, j) is a tile marked by an 'O'
      */
-    private int getMovingDirection(int i, int j) {
+    private Direction getMovingDirection(int i, int j) {
         if (!this.isNextToPlayer(i, j)) {
-            return UNDEFINED;
+            return Direction.UNDEFINED;
         }
 
         if (i == this.playerI + 1) {
-            return DOWN;
+            return Direction.DOWN;
         } else if (i == this.playerI - 1) {
-            return UP;
+            return Direction.UP;
         } else if (j == this.playerJ + 1) {
-            return RIGHT;
+            return Direction.RIGHT;
         } else if (j == this.playerJ - 1) {
-            return LEFT;
+            return Direction.LEFT;
         }
 
         /* We should never get there because if isNextToPlayer returns true,
          * we should be entering one if.
          */
-        return UNDEFINED;
+        return Direction.UNDEFINED;
     }
 
     private boolean canMoveBoxTo(int i, int j) {
@@ -155,72 +152,96 @@ public class Level {
         return this.isEmpty(i, j) || this.isGoal(i, j) || this.isBox(i, j) || this.isBoxOnGoal(i, j);
     }
 
-    // Returns true if the box moved (i.e. was not blocked by a wall or another box
-    private boolean moveBox(int offsetI, int offsetJ, int iStart, int jStart) {
-        int iDest = iStart + offsetI;
-        int jDest = jStart + offsetJ;
-
-        if (!this.canMoveBoxTo(iDest, jDest)) {
-            return false;
-        }
-
-        if (this.isGoal(iDest, jDest)) {
-            this.addBoxOnGoal(iDest, jDest);
+    /* Applies a movement that we know legal */
+    public void moveBox(Movement movement) {
+        if (this.isGoal(movement.iDest, movement.jDest)) {
+            this.addBoxOnGoal(movement.iDest, movement.jDest);
         } else {
-            this.addBox(iDest, jDest);
+            this.addBox(movement.iDest, movement.jDest);
         }
 
-        this.leaveSquare(iStart, jStart);
-        return true;
+        this.leaveSquare(movement.iStart, movement.jStart);
     }
 
-    private void move(int offsetI, int offsetJ) {
-        int iStart = this.playerI;
-        int jStart = this.playerJ;
-
-        int iDest = iStart + offsetI;
-        int jDest = jStart + offsetJ;
-
-        if (!this.canMoveTo(iDest, jDest)) {
-            return;
-        }
-
-        if (this.isBox(iDest, jDest) || isBoxOnGoal(iDest, jDest)) {
-            if (!moveBox(offsetI, offsetJ, iDest, jDest)) return;
-        }
-
-        if (this.isGoal(iDest, jDest)) {
-            this.addPlayerOnGoal(iDest, jDest);
+    /* Applies a movement that we know legal */
+    public void movePlayer(Movement movement) {
+        if (this.isGoal(movement.iDest, movement.jDest)) {
+            this.addPlayerOnGoal(movement.iDest, movement.jDest);
         } else {
-            this.addPlayer(iDest, jDest);
+            this.addPlayer(movement.iDest, movement.jDest);
         }
 
-        this.leaveSquare(iStart, jStart);
+        this.leaveSquare(movement.iStart, movement.jStart);
     }
 
-    public void moveUp() {
-        this.move(-1, 0);
-    }
-
-    public void moveDown() {
-        this.move(1, 0);
-    }
-
-    public void moveLeft() {
-        this.move(0, -1);
-    }
-
-    public void moveRight() {
-        this.move(0, 1);
-    }
-
-    public void moveClick(int j, int i) {
-        switch (this.getMovingDirection(i, j)) {
-            case UP -> this.moveUp();
-            case DOWN -> this.moveDown();
-            case LEFT -> this.moveLeft();
-            case RIGHT -> this.moveRight();
+    public void applyMovement(Movement movement) {
+        if (movement.isBox) {
+            this.moveBox(movement);
+        } else {
+            this.movePlayer(movement);
         }
+    }
+
+    /*
+    * WARNING this method does not check whether the movements are legal or not. It supposes they are
+    * movements[0] = player, movements[1] = box (if it exists)
+    */
+    public void applyMovements(Sequence<Movement> movements) {
+        Iterator<Movement> it = movements.iterator();
+        while (it.hasNext()) {
+            this.applyMovement(it.next());
+        }
+    }
+
+    public Movement getBoxMovement(int iBox, int jBox, Direction direction) {
+        Movement movement = new Movement(iBox, jBox, direction, true);
+
+        if (!this.canMoveBoxTo(movement.iDest, movement.jDest)) {
+            return null;
+        }
+
+        return movement;
+    }
+
+    public Movement getPlayerMovement(Direction direction) {
+        Movement movement = new Movement(this.playerI, this.playerJ, direction);
+
+        if (!this.canMoveTo(movement.iDest, movement.jDest)) {
+            return null;
+        }
+
+        return movement;
+    }
+
+    public Sequence<Movement> getMovements(Direction direction) {
+        Sequence<Movement> movements = Configuration.instance().new_sequence();
+
+        if (direction == Direction.UNDEFINED) {
+            return movements;
+        }
+
+        Movement playerMovement = this.getPlayerMovement(direction);
+
+        if (playerMovement == null) {
+            return movements;
+        }
+
+        if (this.isBox(playerMovement.iDest, playerMovement.jDest) || this.isBoxOnGoal(playerMovement.iDest, playerMovement.jDest)) {
+            Movement boxMovement = this.getBoxMovement(playerMovement.iDest, playerMovement.jDest, direction);
+            if (boxMovement == null) {
+                return movements;
+            }
+
+            movements.insertHead(boxMovement);
+        }
+
+        movements.insertTail(playerMovement);
+
+        return movements;
+    }
+
+    public Sequence<Movement> getMovementByClick(int i, int j) {
+        return this.getMovements(this.getMovingDirection(i, j));
     }
 
     public String toString() {
