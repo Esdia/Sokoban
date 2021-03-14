@@ -20,9 +20,16 @@ public class LevelUI extends JComponent {
     private int topLeftX;
     private int topLeftY;
 
+
+    /* Variables for the animation */
+    int offsetI, offsetJ; // A box will always move along with the player, so we do not need two sets of offsets
+    int movingBoxI, movingBoxJ;
+
     public LevelUI(Game game) {
         this.game = game;
         this.loadImgs();
+        this.setAnimationOffset(0, 0);
+        this.setMovingBox(-1, -1);
     }
 
     private BufferedImage loadImg(String name) {
@@ -49,19 +56,30 @@ public class LevelUI extends JComponent {
         this.boxOnGoal = this.loadImg("box_on_goal.png");
     }
 
-    private BufferedImage selectImage(Level l, int i, int j) {
-        if (l.isEmpty(i, j)) return empty;
-        if (l.isWall(i, j)) return wall;
-        if (l.isPlayer(i, j) || l.isPlayerOnGoal(i, j)) return player;
-        if (l.isBox(i, j)) return box;
-        if (l.isGoal(i, j)) return goal;
-        if (l.isBoxOnGoal(i, j)) return boxOnGoal;
-
-        return null;
-    }
-
     private int getImgSize(Level l) {
         return Math.min(getWidth() / l.columns(), getHeight() / l.lines());
+    }
+
+    public int coordToIndexX(int x) {
+        return (x - this.topLeftX) / this.imgSize;
+    }
+
+    public int coordToIndexY(int y) {
+        return (y - this.topLeftY) / this.imgSize;
+    }
+
+    public int getImgSize() {
+        return this.imgSize;
+    }
+
+    public void setAnimationOffset(int offsetI, int offsetJ) {
+        this.offsetI = offsetI;
+        this.offsetJ = offsetJ;
+    }
+
+    public void setMovingBox(int movingBoxI, int movingBoxJ) {
+        this.movingBoxI = movingBoxI;
+        this.movingBoxJ = movingBoxJ;
     }
 
     private void fillWithGround(Graphics2D drawable) {
@@ -79,12 +97,80 @@ public class LevelUI extends JComponent {
         }
     }
 
-    public int coordToIndexX(int x) {
-        return (x - this.topLeftX) / this.imgSize;
+    private void drawBackground(Graphics2D drawable) {
+        int xStart = this.topLeftX;
+        int yStart = this.topLeftY;
+
+        int x = xStart;
+        int y = yStart;
+
+        Level l = this.game.getCurrentLevel();
+
+        BufferedImage img;
+        for (int i = 0; i < l.lines(); i++) {
+            for (int j = 0; j < l.columns(); j++) {
+                if (l.isEmpty(i, j)) {
+                    x += this.imgSize;
+                    continue;
+                }
+
+                img = null;
+                if (l.isWall(i, j)) {
+                    img = this.wall;
+                } else if (l.isGoal(i, j) || l.isPlayerOnGoal(i, j)) {
+                    img = this.goal;
+                }
+
+                if (img != null) {
+                    drawable.drawImage(img, x, y, this.imgSize, this.imgSize, null);
+                }
+
+                x += this.imgSize;
+            }
+            x = xStart;
+            y += imgSize;
+        }
     }
 
-    public int coordToIndexY(int y) {
-        return (y - this.topLeftY) / this.imgSize;
+    private void drawForeground(Graphics2D drawable) {
+        int xStart = this.topLeftX;
+        int yStart = this.topLeftY;
+
+        int x = xStart;
+        int y = yStart;
+
+        Level l = this.game.getCurrentLevel();
+
+        BufferedImage img;
+        for (int i = 0; i < l.lines(); i++) {
+            for (int j = 0; j < l.columns(); j++) {
+                if (l.isEmpty(i, j)) {
+                    x += this.imgSize;
+                    continue;
+                }
+
+                img = null;
+                if (l.isBox(i, j)) {
+                    img = this.box;
+                } else if (l.isBoxOnGoal(i, j)) {
+                    img = this.boxOnGoal;
+                } else if (l.isPlayer(i, j) || l.isPlayerOnGoal(i, j)) {
+                    img = this.player;
+                    drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
+                }
+
+                if (l.isBox(i, j) || l.isBoxOnGoal(i, j)) {
+                    if (i == this.movingBoxI && j == this.movingBoxJ) {
+                        drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
+                    } else {
+                        drawable.drawImage(img, x, y, this.imgSize, this.imgSize, null);
+                    }
+                }
+                x += this.imgSize;
+            }
+            x = xStart;
+            y += imgSize;
+        }
     }
 
     @Override
@@ -100,34 +186,13 @@ public class LevelUI extends JComponent {
 
         drawable.clearRect(0, 0, width, height);
 
-        this.imgSize = getImgSize(l);
+        this.imgSize = this.getImgSize(l);
 
-
-        int x_start = width / 2 - (l.columns() * imgSize / 2);
-        int y_start = height / 2 - (l.lines() * imgSize / 2);
-
-        int x = x_start;
-        int y = y_start;
-
-        this.topLeftX = x_start;
-        this.topLeftY = y_start;
+        this.topLeftX = width / 2 - (l.columns() * imgSize / 2);
+        this.topLeftY = height / 2 - (l.lines() * imgSize / 2);
 
         this.fillWithGround(drawable);
-
-        BufferedImage img;
-        for (int i = 0; i < l.lines(); i++) {
-            for (int j = 0; j < l.columns(); j++) {
-                if (l.isPlayerOnGoal(i, j)) {
-                    drawable.drawImage(goal, x, y, imgSize, imgSize, null);
-                    drawable.drawImage(player, x, y, imgSize, imgSize, null);
-                } else {
-                    img = this.selectImage(l, i, j);
-                    drawable.drawImage(img, x, y, imgSize, imgSize, null);
-                }
-                x += imgSize;
-            }
-            x = x_start;
-            y += imgSize;
-        }
+        this.drawBackground(drawable);
+        this.drawForeground(drawable);
     }
 }
