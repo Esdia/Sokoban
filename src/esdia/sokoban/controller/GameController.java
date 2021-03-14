@@ -30,6 +30,7 @@ public class GameController extends EventListener {
     public void animationLoop() {
         this.isAnimated = true;
         ActionListener actionListener = actionEvent -> {
+            if (!isAnimated) return;
             Iterator<Animation> it = animations.iterator();
             Animation anim;
             while (it.hasNext()) {
@@ -48,6 +49,10 @@ public class GameController extends EventListener {
         timer.setRepeats(true);
 
         timer.start();
+    }
+
+    public void toggleAnimations() {
+        this.isAnimated = !this.isAnimated;
     }
 
     public void endOfMovingAnimation(Animation animation) {
@@ -121,6 +126,8 @@ public class GameController extends EventListener {
             case KeyEvent.VK_DOWN, KeyEvent.VK_S -> this.move(Direction.DOWN);
             case KeyEvent.VK_LEFT, KeyEvent.VK_Q -> this.move(Direction.LEFT);
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> this.move(Direction.RIGHT);
+
+            case KeyEvent.VK_P -> this.toggleAnimations();
 
             case KeyEvent.VK_ESCAPE -> this.window.shutdown();
         }
