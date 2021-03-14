@@ -29,11 +29,15 @@ public abstract class EventListener implements MouseListener, KeyListener {
         if (! this.game.skipLevel()) {
             this.window.shutdown();
         }
+
+        this.window.repaint();
     }
 
     public abstract void mouseClick(int x, int y);
 
     public abstract void keyInput(int keyCode);
+
+    public abstract void animationLoop();
 
     @Override
     public void mousePressed(MouseEvent e) {
