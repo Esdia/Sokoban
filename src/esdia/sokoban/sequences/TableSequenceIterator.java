@@ -4,19 +4,22 @@ import java.util.NoSuchElementException;
 
 public class TableSequenceIterator<Type> implements Iterator<Type> {
     private final TableSequence<Type> s;
-    private int current;
+
+    private int rank, position, last;
 
     private boolean can_delete;
 
     TableSequenceIterator(TableSequence<Type> s) {
         this.s = s;
-        this.current = 0;
+        this.rank = 0;
+        this.position = this.s.head;
+        this.last = -1;
         this.can_delete = false;
     }
 
     @Override
     public boolean hasNext() {
-        return this.current < this.s.size;
+        return this.rank < this.s.size;
     }
 
     @Override
@@ -26,9 +29,12 @@ public class TableSequenceIterator<Type> implements Iterator<Type> {
         }
         this.can_delete = true;
 
+        this.last = this.position;
+        this.position = (this.position + 1) % this.s.table.length;
+        this.rank++;
+
         @SuppressWarnings("unchecked")
-        Type val = (Type) this.s.table[this.current];
-        this.current++;
+        Type val = (Type) this.s.table[this.last];
         return val;
     }
 
@@ -40,10 +46,17 @@ public class TableSequenceIterator<Type> implements Iterator<Type> {
 
         this.can_delete = false;
 
-        // Current cannot be equal to zero if you can delete
-        this.current--;
-        System.arraycopy(this.s.table, this.current + 1, this.s.table, this.current, this.s.size - 1 - this.current);
-        this.s.size--;
+        this.position = last;
 
+        int current = this.rank;
+        while (current < this.s.size) {
+            int next = (this.last + 1) % this.s.table.length;
+            this.s.table[last] = this.s.table[next];
+            this.last = next;
+            current++;
+        }
+        this.last = -1;
+        this.rank--;
+        this.s.size--;
     }
 }
