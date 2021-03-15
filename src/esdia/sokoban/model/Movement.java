@@ -52,4 +52,7 @@ public class Movement {
         return jDest;
     }
 
+    public Direction getDirection() {
+        return this.direction;
+    }
 }
