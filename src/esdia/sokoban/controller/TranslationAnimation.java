@@ -8,6 +8,8 @@ import esdia.sokoban.view.LevelUI;
 import esdia.sokoban.view.MainWindow;
 
 public class TranslationAnimation extends Animation {
+    Game game;
+
     Sequence<Movement> movements;
     Movement playerMovement;
     Movement boxMovement;
@@ -20,7 +22,9 @@ public class TranslationAnimation extends Animation {
     double nbFrames;
 
     public TranslationAnimation(MainWindow window, Game game, Sequence<Movement> movements) {
-        super(window, game);
+        super(window);
+
+        this.game = game;
 
         this.movements = movements;
 
