@@ -85,7 +85,7 @@ public class GameController extends EventListener {
     }
 
     public void applyMovements(Sequence<Movement> movements) {
-        if (!movements.isEmpty()) {
+        if (!movements.isEmpty() && !this.isMoving) {
             this.window.getLevelUI().setFacingDirection(
                     movements.iterator().next().getDirection()
             );
