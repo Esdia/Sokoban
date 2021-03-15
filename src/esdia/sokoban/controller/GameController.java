@@ -71,7 +71,7 @@ public class GameController extends EventListener {
     public void animate(Sequence<Movement> movements) {
         if (!movements.isEmpty()) {
             this.isMoving = true;
-            Animation animation = new Animation(this.window, this.game, movements);
+            Animation animation = new TranslationAnimation(this.window, this.game, movements);
             this.animations.insertHead(animation);
         }
     }
