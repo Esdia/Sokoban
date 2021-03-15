@@ -1,5 +1,6 @@
 package esdia.sokoban.view;
 
+import esdia.sokoban.model.Direction;
 import esdia.sokoban.model.Game;
 import esdia.sokoban.model.Level;
 import esdia.sokoban.global.Configuration;
@@ -15,7 +16,9 @@ public class LevelUI extends JComponent {
     private final Game game;
 
     private int imgSize;
-    BufferedImage empty, wall, player, box, goal, boxOnGoal;
+    BufferedImage empty, wall, box, goal, boxOnGoal;
+
+    BufferedImage[][] player;
 
     private int topLeftX;
     private int topLeftY;
@@ -25,11 +28,16 @@ public class LevelUI extends JComponent {
     int offsetI, offsetJ; // A box will always move along with the player, so we do not need two sets of offsets
     int movingBoxI, movingBoxJ;
 
+    Direction currentFacingDirection;
+    int currentWalkingFrame;
+
     public LevelUI(Game game) {
         this.game = game;
         this.loadImgs();
         this.setAnimationOffset(0, 0);
         this.setMovingBox(-1, -1);
+        this.currentFacingDirection = Direction.DOWN;
+        this.currentWalkingFrame = 0;
     }
 
     private BufferedImage loadImg(String name) {
@@ -50,10 +58,16 @@ public class LevelUI extends JComponent {
     private void loadImgs() {
         this.empty = this.loadImg("empty.png");
         this.wall = this.loadImg("wall.png");
-        this.player = this.loadImg("player.png");
         this.box = this.loadImg("box.png");
         this.goal = this.loadImg("goal.png");
         this.boxOnGoal = this.loadImg("box_on_goal.png");
+
+        player = new BufferedImage[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                player[i][j] = this.loadImg("player/player_" + i + "_" + j + ".png");
+            }
+        }
     }
 
     private int getImgSize(Level l) {
@@ -80,6 +94,14 @@ public class LevelUI extends JComponent {
     public void setMovingBox(int movingBoxI, int movingBoxJ) {
         this.movingBoxI = movingBoxI;
         this.movingBoxJ = movingBoxJ;
+    }
+
+    public void setFacingDirection(Direction direction) {
+        this.currentFacingDirection = direction;
+    }
+
+    public void nextWalkingFrame() {
+        this.currentWalkingFrame = (this.currentWalkingFrame + 1) % 4;
     }
 
     private void fillWithGround(Graphics2D drawable) {
@@ -155,7 +177,7 @@ public class LevelUI extends JComponent {
                 } else if (l.isBoxOnGoal(i, j)) {
                     img = this.boxOnGoal;
                 } else if (l.isPlayer(i, j) || l.isPlayerOnGoal(i, j)) {
-                    img = this.player;
+                    img = this.player[this.currentFacingDirection.ordinal()][this.currentWalkingFrame];
                     drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
                 }
 

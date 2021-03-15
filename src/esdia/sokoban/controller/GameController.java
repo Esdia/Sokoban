@@ -7,6 +7,7 @@ import esdia.sokoban.model.Movement;
 import esdia.sokoban.sequences.Iterator;
 import esdia.sokoban.sequences.Sequence;
 import esdia.sokoban.view.EventListener;
+import esdia.sokoban.view.MainWindow;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -24,6 +25,13 @@ public class GameController extends EventListener {
 
         this.animations = Configuration.instance().new_sequence();
         this.isAnimated = false;
+    }
+
+    @Override
+    public void setWindow(MainWindow window) {
+        super.setWindow(window);
+
+        this.animations.insertHead(new PlayerAnimation(window));
     }
 
     @Override
@@ -77,6 +85,12 @@ public class GameController extends EventListener {
     }
 
     public void applyMovements(Sequence<Movement> movements) {
+        if (!movements.isEmpty()) {
+            this.window.getLevelUI().setFacingDirection(
+                    movements.iterator().next().getDirection()
+            );
+        }
+
         if (this.isAnimated) {
             if (! this.isMoving) {
                 this.animate(movements);

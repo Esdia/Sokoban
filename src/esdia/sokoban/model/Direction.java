@@ -2,8 +2,8 @@ package esdia.sokoban.model;
 
 public enum Direction {
     UP,
-    DOWN,
     LEFT,
+    DOWN,
     RIGHT,
     UNDEFINED
 }
