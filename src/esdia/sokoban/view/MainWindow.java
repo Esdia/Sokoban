@@ -3,6 +3,8 @@ package esdia.sokoban.view;
 import esdia.sokoban.global.Configuration;
 import esdia.sokoban.model.Direction;
 import esdia.sokoban.model.Game;
+import esdia.sokoban.model.Movement;
+import esdia.sokoban.sequences.Sequence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,8 +75,12 @@ public class MainWindow implements Runnable {
         this.levelUI.setAnimationOffset(offsetI, offsetJ);
     }
 
-    public void setMovingBox(int movingBoxI, int movingBoxJ) {
-        this.levelUI.setMovingBox(movingBoxI, movingBoxJ);
+    public void setTranslatingObjects(Sequence<Movement> movements) {
+        this.levelUI.setTranslatingObjects(movements);
+    }
+
+    public void deleteTranslatingObjects() {
+        this.levelUI.deleteTranslatingObjects();
     }
 
     public void setFacingDirection(Direction direction) {

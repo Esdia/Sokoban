@@ -3,6 +3,9 @@ package esdia.sokoban.view;
 import esdia.sokoban.model.Direction;
 import esdia.sokoban.model.Game;
 import esdia.sokoban.global.Configuration;
+import esdia.sokoban.model.Movement;
+import esdia.sokoban.sequences.Iterator;
+import esdia.sokoban.sequences.Sequence;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,8 +27,9 @@ public class LevelUI extends JComponent {
 
 
     /* Variables for the animation */
+    private final Sequence<Movement> emptySequence;
+    private Sequence<Movement> translatingObjects;
     private int offsetI, offsetJ; // A box will always move along with the player, so we do not need two sets of offsets
-    private int movingBoxI, movingBoxJ;
 
     private Direction currentFacingDirection;
     private int currentWalkingFrame;
@@ -34,7 +38,8 @@ public class LevelUI extends JComponent {
         this.game = game;
         this.loadImgs();
         this.setAnimationOffset(0, 0);
-        this.setMovingBox(-1, -1);
+        this.translatingObjects = Configuration.instance().new_sequence();
+        this.emptySequence = this.translatingObjects;
         this.currentFacingDirection = Direction.DOWN;
         this.currentWalkingFrame = 0;
     }
@@ -90,9 +95,26 @@ public class LevelUI extends JComponent {
         this.offsetJ = offsetJ;
     }
 
-    void setMovingBox(int movingBoxI, int movingBoxJ) {
-        this.movingBoxI = movingBoxI;
-        this.movingBoxJ = movingBoxJ;
+    void setTranslatingObjects(Sequence<Movement> movements) {
+        this.translatingObjects = movements;
+    }
+
+    public void deleteTranslatingObjects() {
+        this.translatingObjects = this.emptySequence;
+    }
+
+    private boolean isTranslatingObject(int i, int j) {
+        Iterator<Movement> it = this.translatingObjects.iterator();
+        Movement movement;
+
+        while (it.hasNext()) {
+            movement = it.next();
+            if (movement.getiStart() == i && movement.getjStart() == j) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void setFacingDirection(Direction direction) {
@@ -159,6 +181,7 @@ public class LevelUI extends JComponent {
         int y = yStart;
 
         BufferedImage img;
+        boolean isTranslating;
         for (int i = 0; i < this.game.lines(); i++) {
             for (int j = 0; j < this.game.columns(); j++) {
                 if (this.game.isEmpty(i, j)) {
@@ -167,22 +190,27 @@ public class LevelUI extends JComponent {
                 }
 
                 img = null;
+                isTranslating = this.isTranslatingObject(i, j);
+                if (isTranslating) {
+                    x += this.offsetJ;
+                    y += this.offsetI;
+                }
+
                 if (this.game.isBox(i, j)) {
                     img = this.box;
                 } else if (this.game.isBoxOnGoal(i, j)) {
                     img = this.boxOnGoal;
                 } else if (this.game.isPlayer(i, j) || this.game.isPlayerOnGoal(i, j)) {
                     img = this.player[this.currentFacingDirection.ordinal()][this.currentWalkingFrame];
-                    drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
                 }
 
-                if (this.game.isBox(i, j) || this.game.isBoxOnGoal(i, j)) {
-                    if (i == this.movingBoxI && j == this.movingBoxJ) {
-                        drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
-                    } else {
-                        drawable.drawImage(img, x, y, this.imgSize, this.imgSize, null);
-                    }
+                drawable.drawImage(img, x, y, this.imgSize, this.imgSize, null);
+
+                if (isTranslating) {
+                    x -= this.offsetJ;
+                    y -= this.offsetI;
                 }
+
                 x += this.imgSize;
             }
             x = xStart;

@@ -10,7 +10,6 @@ public class TranslationAnimation extends Animation {
     private final Game game;
 
     private final Sequence<Movement> movements;
-    private final boolean isMovingBox;
 
     /* The number of pixels the object moves each frame */
     private final int directionI;
@@ -33,12 +32,6 @@ public class TranslationAnimation extends Animation {
         }
 
         Movement movement = it.next();
-        if (it.hasNext()) {
-            this.isMovingBox = true;
-            this.window.setMovingBox(movement.getiStart(), movement.getjStart());
-        } else {
-            this.isMovingBox = false;
-        }
 
         /* For now, an animation last 5 frames */
         this.nbFrames = 5;
@@ -46,6 +39,8 @@ public class TranslationAnimation extends Animation {
 
         this.directionI = movement.getiDest() - movement.getiStart();
         this.directionJ = movement.getjDest() - movement.getjStart();
+
+        this.window.setTranslatingObjects(this.movements);
     }
 
     @Override
@@ -64,9 +59,7 @@ public class TranslationAnimation extends Animation {
 
     @Override
     void afterComplete() {
-        if (this.isMovingBox) {
-            this.window.setMovingBox(-1, -1);
-        }
+        this.window.deleteTranslatingObjects();
         this.window.setAnimationOffset(0, 0);
         this.game.applyMovements(this.movements);
     }
