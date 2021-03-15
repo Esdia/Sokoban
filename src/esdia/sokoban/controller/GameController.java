@@ -14,10 +14,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class GameController extends EventListener {
-    Sequence<Animation> animations;
+    private final Sequence<Animation> animations;
 
-    boolean isMoving;
-    boolean isAnimated;
+    private boolean isMoving;
+    private boolean isAnimated;
 
     public GameController(Game game) {
         super(game);
@@ -44,7 +44,11 @@ public class GameController extends EventListener {
             while (it.hasNext()) {
                 anim = it.next();
                 if (anim.isComplete()) {
-                    this.endOfMovingAnimation(anim);
+                    if (anim instanceof TranslationAnimation) {
+                        this.endOfMovingAnimation(anim);
+                    } else {
+                        anim.afterComplete();
+                    }
                     it.delete();
                 } else {
                     anim.prepareNextFrame();
@@ -59,24 +63,24 @@ public class GameController extends EventListener {
         timer.start();
     }
 
-    public void toggleAnimations() {
+    private void toggleAnimations() {
         this.isAnimated = !this.isAnimated;
     }
 
-    public void endOfMovingAnimation(Animation animation) {
+    private void endOfMovingAnimation(Animation animation) {
         animation.afterComplete();
         this.isMoving = false;
         this.afterMove();
     }
 
-    public void afterMove() {
+    private void afterMove() {
         if (this.game.isComplete()) {
             this.loadNextLevel();
         }
         this.window.repaint();
     }
 
-    public void animate(Sequence<Movement> movements) {
+    private void animate(Sequence<Movement> movements) {
         if (!movements.isEmpty()) {
             this.isMoving = true;
             Animation animation = new TranslationAnimation(this.window, this.game, movements);
@@ -84,9 +88,9 @@ public class GameController extends EventListener {
         }
     }
 
-    public void applyMovements(Sequence<Movement> movements) {
+    private void applyMovements(Sequence<Movement> movements) {
         if (!movements.isEmpty() && !this.isMoving) {
-            this.window.getLevelUI().setFacingDirection(
+            this.window.setFacingDirection(
                     movements.iterator().next().getDirection()
             );
         }
@@ -119,7 +123,7 @@ public class GameController extends EventListener {
         this.applyMovements(movements);
     }
 
-    public void move(Direction direction) {
+    private void move(Direction direction) {
         Sequence<Movement> movements = this.game.getMovements(direction);
 
         this.applyMovements(movements);

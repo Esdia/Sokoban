@@ -3,30 +3,30 @@ package esdia.sokoban.controller;
 import esdia.sokoban.view.MainWindow;
 
 public class PlayerAnimation extends Animation {
-    int counter;
+    private int counter;
 
-    public PlayerAnimation(MainWindow window) {
+    PlayerAnimation(MainWindow window) {
         super(window);
 
         this.counter = 0;
     }
 
     @Override
-    public void prepareNextFrame() {
-        counter++;
-        if (counter == 15) {
-            counter = 0;
-            this.window.getLevelUI().nextWalkingFrame();
+    void prepareNextFrame() {
+        this.counter++;
+        if (this.counter == 15) {
+            this.counter = 0;
+            this.window.nextWalkingFrame();
         }
     }
 
     @Override
-    public void afterComplete() {
+    void afterComplete() {
         throw new IllegalStateException("This animation should never complete");
     }
 
     @Override
-    public boolean isComplete() {
+    boolean isComplete() {
         // The player animation is never complete
         return false;
     }

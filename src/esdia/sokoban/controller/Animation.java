@@ -3,15 +3,15 @@ package esdia.sokoban.controller;
 import esdia.sokoban.view.MainWindow;
 
 public abstract class Animation {
-    MainWindow window;
+    protected final MainWindow window;
 
-    public Animation(MainWindow window) {
+    Animation(MainWindow window) {
         this.window = window;
     }
 
-    public abstract void prepareNextFrame();
+    abstract void prepareNextFrame();
 
-    public abstract void afterComplete();
+    abstract void afterComplete();
 
-    public abstract boolean isComplete();
+    abstract boolean isComplete();
 }

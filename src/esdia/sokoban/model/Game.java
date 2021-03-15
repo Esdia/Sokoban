@@ -11,10 +11,6 @@ public class Game {
         this.reader = reader;
     }
 
-    public Level getCurrentLevel() {
-        return this.currentLevel;
-    }
-
     public boolean nextLevel() {
         Level tmp = this.reader.read();
         if (tmp == null) {
@@ -37,7 +33,7 @@ public class Game {
     }
 
     public boolean isComplete() {
-        return this.getCurrentLevel().isComplete();
+        return this.currentLevel.isComplete();
     }
 
     public boolean loadNextLevel() {
@@ -61,15 +57,28 @@ public class Game {
         return this.loadNextLevel();
     }
 
+    public void applyMovements(Sequence<Movement> movements) {
+        this.currentLevel.applyMovements(movements);
+    }
+
     public Sequence<Movement> getMovements(Direction direction) {
-        return this.getCurrentLevel().getMovements(direction);
+        return this.currentLevel.getMovements(direction);
     }
 
     public Sequence<Movement> getMovementsByClick(int i, int j) {
-        return this.getCurrentLevel().getMovementByClick(i, j);
+        return this.currentLevel.getMovementByClick(i, j);
     }
 
-    public void applyMovements(Sequence<Movement> movements) {
-        this.getCurrentLevel().applyMovements(movements);
-    }
+    public String name() { return this.currentLevel.name(); }
+
+    public boolean isEmpty(int i, int j) { return this.currentLevel.isEmpty(i, j); }
+    public boolean isWall(int i, int j) { return this.currentLevel.isWall(i, j); }
+    public boolean isPlayer(int i, int j) { return this.currentLevel.isPlayer(i, j); }
+    public boolean isBox(int i, int j) { return this.currentLevel.isBox(i, j); }
+    public boolean isGoal(int i, int j) { return this.currentLevel.isGoal(i, j); }
+    public boolean isPlayerOnGoal(int i, int j) { return this.currentLevel.isPlayerOnGoal(i, j); }
+    public boolean isBoxOnGoal(int i, int j) { return this.currentLevel.isBoxOnGoal(i, j); }
+
+    public int lines() { return this.currentLevel.lines(); }
+    public int columns() { return this.currentLevel.columns(); }
 }

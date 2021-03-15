@@ -1,17 +1,17 @@
 package esdia.sokoban.model;
 
 public class Movement {
-    int iStart;
-    int jStart;
+    private final int iStart;
+    private final int jStart;
 
-    int iDest;
-    int jDest;
+    private final int iDest;
+    private final int jDest;
 
-    Direction direction;
+    private final Direction direction;
 
-    boolean isBox;
+    private final boolean isBox;
 
-    public Movement(int iStart, int jStart, Direction direction, boolean isBox) {
+    Movement(int iStart, int jStart, Direction direction, boolean isBox) {
         this.direction = direction;
         this.iStart = iStart;
         this.jStart = jStart;
@@ -54,5 +54,9 @@ public class Movement {
 
     public Direction getDirection() {
         return this.direction;
+    }
+
+    public boolean isBox() {
+        return isBox;
     }
 }

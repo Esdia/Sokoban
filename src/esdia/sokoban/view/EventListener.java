@@ -15,7 +15,7 @@ public abstract class EventListener implements MouseListener, KeyListener {
         this.game = game;
     }
 
-    public void setWindow(MainWindow window) {
+    protected void setWindow(MainWindow window) {
         this.window = window;
     }
 
@@ -33,11 +33,11 @@ public abstract class EventListener implements MouseListener, KeyListener {
         this.window.repaint();
     }
 
-    public abstract void mouseClick(int x, int y);
+    protected abstract void mouseClick(int x, int y);
 
-    public abstract void keyInput(int keyCode);
+    protected abstract void keyInput(int keyCode);
 
-    public abstract void animationLoop();
+    protected abstract void animationLoop();
 
     @Override
     public void mousePressed(MouseEvent e) {

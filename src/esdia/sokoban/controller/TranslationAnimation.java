@@ -4,24 +4,22 @@ import esdia.sokoban.model.Game;
 import esdia.sokoban.model.Movement;
 import esdia.sokoban.sequences.Iterator;
 import esdia.sokoban.sequences.Sequence;
-import esdia.sokoban.view.LevelUI;
 import esdia.sokoban.view.MainWindow;
 
 public class TranslationAnimation extends Animation {
-    Game game;
+    private final Game game;
 
-    Sequence<Movement> movements;
-    Movement playerMovement;
-    Movement boxMovement;
+    private final Sequence<Movement> movements;
+    private final boolean isMovingBox;
 
     /* The number of pixels the object moves each frame */
-    int offsetI;
-    int offsetJ;
+    private final int directionI;
+    private final int directionJ;
 
-    double drawnFrames;
-    double nbFrames;
+    private double drawnFrames;
+    private final double nbFrames;
 
-    public TranslationAnimation(MainWindow window, Game game, Sequence<Movement> movements) {
+    TranslationAnimation(MainWindow window, Game game, Sequence<Movement> movements) {
         super(window);
 
         this.game = game;
@@ -34,56 +32,47 @@ public class TranslationAnimation extends Animation {
             throw new IllegalStateException("Cannot animate an empty movement sequence");
         }
 
-        this.playerMovement = it.next();
+        Movement movement = it.next();
         if (it.hasNext()) {
-            this.boxMovement = this.playerMovement;
-            this.playerMovement = it.next();
-            this.window.getLevelUI().setMovingBox(this.boxMovement.getiStart(), this.boxMovement.getjStart());
+            this.isMovingBox = true;
+            this.window.setMovingBox(movement.getiStart(), movement.getjStart());
         } else {
-            this.boxMovement = null;
+            this.isMovingBox = false;
         }
 
-        /* For now, an animation last 10 frames */
+        /* For now, an animation last 5 frames */
         this.nbFrames = 5;
         this.drawnFrames = 0;
 
-        this.setOffsets();
-    }
-
-    private void setOffsets() {
-        this.offsetI = this.playerMovement.getiDest() - this.playerMovement.getiStart();
-        this.offsetJ = this.playerMovement.getjDest() - this.playerMovement.getjStart();
+        this.directionI = movement.getiDest() - movement.getiStart();
+        this.directionJ = movement.getjDest() - movement.getjStart();
     }
 
     @Override
-    public void prepareNextFrame() {
+    void prepareNextFrame() {
         if (this.drawnFrames == this.nbFrames) {
             return;
         }
 
         this.drawnFrames++;
 
-        LevelUI levelUI = this.window.getLevelUI();
-
-        levelUI.setAnimationOffset(
-                offsetI * (int) (drawnFrames / nbFrames * levelUI.getImgSize()),
-                offsetJ * (int) (drawnFrames / nbFrames * levelUI.getImgSize())
+        this.window.setAnimationOffset(
+                directionI * (int) (drawnFrames / nbFrames * this.window.getImgSize()),
+                directionJ * (int) (drawnFrames / nbFrames * this.window.getImgSize())
         );
     }
 
     @Override
-    public void afterComplete() {
-        LevelUI levelUI = this.window.getLevelUI();
-
-        if (this.boxMovement != null) {
-            levelUI.setMovingBox(-1, -1);
+    void afterComplete() {
+        if (this.isMovingBox) {
+            this.window.setMovingBox(-1, -1);
         }
-        levelUI.setAnimationOffset(0, 0);
+        this.window.setAnimationOffset(0, 0);
         this.game.applyMovements(this.movements);
     }
 
     @Override
-    public boolean isComplete() {
+    boolean isComplete() {
         return this.drawnFrames == this.nbFrames;
     }
 

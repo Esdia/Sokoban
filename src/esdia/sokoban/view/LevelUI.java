@@ -2,7 +2,6 @@ package esdia.sokoban.view;
 
 import esdia.sokoban.model.Direction;
 import esdia.sokoban.model.Game;
-import esdia.sokoban.model.Level;
 import esdia.sokoban.global.Configuration;
 
 import javax.imageio.ImageIO;
@@ -16,22 +15,22 @@ public class LevelUI extends JComponent {
     private final Game game;
 
     private int imgSize;
-    BufferedImage empty, wall, box, goal, boxOnGoal;
+    private BufferedImage empty, wall, box, goal, boxOnGoal;
 
-    BufferedImage[][] player;
+    private BufferedImage[][] player;
 
     private int topLeftX;
     private int topLeftY;
 
 
     /* Variables for the animation */
-    int offsetI, offsetJ; // A box will always move along with the player, so we do not need two sets of offsets
-    int movingBoxI, movingBoxJ;
+    private int offsetI, offsetJ; // A box will always move along with the player, so we do not need two sets of offsets
+    private int movingBoxI, movingBoxJ;
 
-    Direction currentFacingDirection;
-    int currentWalkingFrame;
+    private Direction currentFacingDirection;
+    private int currentWalkingFrame;
 
-    public LevelUI(Game game) {
+    LevelUI(Game game) {
         this.game = game;
         this.loadImgs();
         this.setAnimationOffset(0, 0);
@@ -70,37 +69,37 @@ public class LevelUI extends JComponent {
         }
     }
 
-    private int getImgSize(Level l) {
-        return Math.min(getWidth() / l.columns(), getHeight() / l.lines());
-    }
-
-    public int coordToIndexX(int x) {
+    int coordToIndexX(int x) {
         return (x - this.topLeftX) / this.imgSize;
     }
 
-    public int coordToIndexY(int y) {
+    int coordToIndexY(int y) {
         return (y - this.topLeftY) / this.imgSize;
     }
 
-    public int getImgSize() {
+    private void setImgSize() {
+        this.imgSize = Math.min(getWidth() / game.columns(), getHeight() / game.lines());
+    }
+
+    int getImgSize() {
         return this.imgSize;
     }
 
-    public void setAnimationOffset(int offsetI, int offsetJ) {
+    void setAnimationOffset(int offsetI, int offsetJ) {
         this.offsetI = offsetI;
         this.offsetJ = offsetJ;
     }
 
-    public void setMovingBox(int movingBoxI, int movingBoxJ) {
+    void setMovingBox(int movingBoxI, int movingBoxJ) {
         this.movingBoxI = movingBoxI;
         this.movingBoxJ = movingBoxJ;
     }
 
-    public void setFacingDirection(Direction direction) {
+    void setFacingDirection(Direction direction) {
         this.currentFacingDirection = direction;
     }
 
-    public void nextWalkingFrame() {
+    void nextWalkingFrame() {
         this.currentWalkingFrame = (this.currentWalkingFrame + 1) % 4;
     }
 
@@ -126,20 +125,18 @@ public class LevelUI extends JComponent {
         int x = xStart;
         int y = yStart;
 
-        Level l = this.game.getCurrentLevel();
-
         BufferedImage img;
-        for (int i = 0; i < l.lines(); i++) {
-            for (int j = 0; j < l.columns(); j++) {
-                if (l.isEmpty(i, j)) {
+        for (int i = 0; i < this.game.lines(); i++) {
+            for (int j = 0; j < this.game.columns(); j++) {
+                if (this.game.isEmpty(i, j)) {
                     x += this.imgSize;
                     continue;
                 }
 
                 img = null;
-                if (l.isWall(i, j)) {
+                if (this.game.isWall(i, j)) {
                     img = this.wall;
-                } else if (l.isGoal(i, j) || l.isPlayerOnGoal(i, j)) {
+                } else if (this.game.isGoal(i, j) || this.game.isPlayerOnGoal(i, j)) {
                     img = this.goal;
                 }
 
@@ -161,27 +158,25 @@ public class LevelUI extends JComponent {
         int x = xStart;
         int y = yStart;
 
-        Level l = this.game.getCurrentLevel();
-
         BufferedImage img;
-        for (int i = 0; i < l.lines(); i++) {
-            for (int j = 0; j < l.columns(); j++) {
-                if (l.isEmpty(i, j)) {
+        for (int i = 0; i < this.game.lines(); i++) {
+            for (int j = 0; j < this.game.columns(); j++) {
+                if (this.game.isEmpty(i, j)) {
                     x += this.imgSize;
                     continue;
                 }
 
                 img = null;
-                if (l.isBox(i, j)) {
+                if (this.game.isBox(i, j)) {
                     img = this.box;
-                } else if (l.isBoxOnGoal(i, j)) {
+                } else if (this.game.isBoxOnGoal(i, j)) {
                     img = this.boxOnGoal;
-                } else if (l.isPlayer(i, j) || l.isPlayerOnGoal(i, j)) {
+                } else if (this.game.isPlayer(i, j) || this.game.isPlayerOnGoal(i, j)) {
                     img = this.player[this.currentFacingDirection.ordinal()][this.currentWalkingFrame];
                     drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
                 }
 
-                if (l.isBox(i, j) || l.isBoxOnGoal(i, j)) {
+                if (this.game.isBox(i, j) || this.game.isBoxOnGoal(i, j)) {
                     if (i == this.movingBoxI && j == this.movingBoxJ) {
                         drawable.drawImage(img, x + offsetJ, y + offsetI, this.imgSize, this.imgSize, null);
                     } else {
@@ -201,17 +196,16 @@ public class LevelUI extends JComponent {
                 "Repainting window"
         );
         Graphics2D drawable = (Graphics2D) g;
-        Level l = this.game.getCurrentLevel();
 
         int width = getWidth();
         int height = getHeight();
 
         drawable.clearRect(0, 0, width, height);
 
-        this.imgSize = this.getImgSize(l);
+        this.setImgSize();
 
-        this.topLeftX = width / 2 - (l.columns() * imgSize / 2);
-        this.topLeftY = height / 2 - (l.lines() * imgSize / 2);
+        this.topLeftX = width / 2 - (this.game.columns() * imgSize / 2);
+        this.topLeftY = height / 2 - (this.game.lines() * imgSize / 2);
 
         this.fillWithGround(drawable);
         this.drawBackground(drawable);

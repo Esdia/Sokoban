@@ -4,7 +4,7 @@ import esdia.sokoban.global.Configuration;
 import esdia.sokoban.sequences.Iterator;
 import esdia.sokoban.sequences.Sequence;
 
-public class Level {
+class Level {
     private static final int EMPTY = 0;
     private static final int WALL = 1;
     private static final int PLAYER = 2;
@@ -17,7 +17,7 @@ public class Level {
     private int playerI;
     private int playerJ;
 
-    int nbGoals;
+    private int nbGoals;
     private int nbBoxesOnGoal;
 
     private int[][] grid;
@@ -25,13 +25,17 @@ public class Level {
 
     private String name;
 
-    public Level() {
+    Level() {
         this.l = 0;
         this.c = 0;
         this.name = null;
         this.grid = new int[0][0];
         this.nbGoals = 0;
         this.nbBoxesOnGoal = 0;
+    }
+
+    void setNbGoals(int nbGoals) {
+        this.nbGoals = nbGoals;
     }
 
     void resize_grid(int new_l, int new_c) {
@@ -51,7 +55,7 @@ public class Level {
 
     void setName(String s) { this.name = s; }
 
-    void setPlayerCoords(int i, int j) {
+    private void setPlayerCoords(int i, int j) {
         this.playerI = i;
         this.playerJ = j;
     }
@@ -64,7 +68,7 @@ public class Level {
     void addPlayerOnGoal(int i, int j) { this.grid[i][j] = PLAYER_ON_GOAL; this.setPlayerCoords(i, j); }
     void addBoxOnGoal(int i, int j) { this.grid[i][j] = BOX_ON_GOAL; this.nbBoxesOnGoal++; }
 
-    void leaveSquare(int i, int j) {
+    private void leaveSquare(int i, int j) {
         if (this.isBoxOnGoal(i, j)) {
             this.nbBoxesOnGoal--;
             this.addGoal(i, j);
@@ -79,15 +83,15 @@ public class Level {
     public int columns() { return this.c; }
     public String name() { return this.name; }
 
-    public boolean isEmpty(int i, int j) { return this.grid[i][j] == EMPTY; }
-    public boolean isWall(int i, int j) { return this.grid[i][j] == WALL; }
-    public boolean isPlayer(int i, int j) { return this.grid[i][j] == PLAYER; }
-    public boolean isBox(int i, int j) { return this.grid[i][j] == BOX; }
-    public boolean isGoal(int i, int j) { return this.grid[i][j] == GOAL; }
-    public boolean isPlayerOnGoal(int i, int j) { return this.grid[i][j] == PLAYER_ON_GOAL; }
-    public boolean isBoxOnGoal(int i, int j) { return this.grid[i][j] == BOX_ON_GOAL; }
+    boolean isEmpty(int i, int j) { return this.grid[i][j] == EMPTY; }
+    boolean isWall(int i, int j) { return this.grid[i][j] == WALL; }
+    boolean isPlayer(int i, int j) { return this.grid[i][j] == PLAYER; }
+    boolean isBox(int i, int j) { return this.grid[i][j] == BOX; }
+    boolean isGoal(int i, int j) { return this.grid[i][j] == GOAL; }
+    boolean isPlayerOnGoal(int i, int j) { return this.grid[i][j] == PLAYER_ON_GOAL; }
+    boolean isBoxOnGoal(int i, int j) { return this.grid[i][j] == BOX_ON_GOAL; }
 
-    public boolean isComplete() {
+    boolean isComplete() {
         return this.nbBoxesOnGoal == this.nbGoals;
     }
 
@@ -153,29 +157,29 @@ public class Level {
     }
 
     /* Applies a movement that we know legal */
-    public void moveBox(Movement movement) {
-        if (this.isGoal(movement.iDest, movement.jDest)) {
-            this.addBoxOnGoal(movement.iDest, movement.jDest);
+    private void moveBox(Movement movement) {
+        if (this.isGoal(movement.getiDest(), movement.getjDest())) {
+            this.addBoxOnGoal(movement.getiDest(), movement.getjDest());
         } else {
-            this.addBox(movement.iDest, movement.jDest);
+            this.addBox(movement.getiDest(), movement.getjDest());
         }
 
-        this.leaveSquare(movement.iStart, movement.jStart);
+        this.leaveSquare(movement.getiStart(), movement.getjStart());
     }
 
     /* Applies a movement that we know legal */
-    public void movePlayer(Movement movement) {
-        if (this.isGoal(movement.iDest, movement.jDest)) {
-            this.addPlayerOnGoal(movement.iDest, movement.jDest);
+    private void movePlayer(Movement movement) {
+        if (this.isGoal(movement.getiDest(), movement.getjDest())) {
+            this.addPlayerOnGoal(movement.getiDest(), movement.getjDest());
         } else {
-            this.addPlayer(movement.iDest, movement.jDest);
+            this.addPlayer(movement.getiDest(), movement.getjDest());
         }
 
-        this.leaveSquare(movement.iStart, movement.jStart);
+        this.leaveSquare(movement.getiStart(), movement.getjStart());
     }
 
-    public void applyMovement(Movement movement) {
-        if (movement.isBox) {
+    void applyMovement(Movement movement) {
+        if (movement.isBox()) {
             this.moveBox(movement);
         } else {
             this.movePlayer(movement);
@@ -186,34 +190,34 @@ public class Level {
     * WARNING this method does not check whether the movements are legal or not. It supposes they are
     * movements[0] = player, movements[1] = box (if it exists)
     */
-    public void applyMovements(Sequence<Movement> movements) {
+    void applyMovements(Sequence<Movement> movements) {
         Iterator<Movement> it = movements.iterator();
         while (it.hasNext()) {
             this.applyMovement(it.next());
         }
     }
 
-    public Movement getBoxMovement(int iBox, int jBox, Direction direction) {
+    private Movement getBoxMovement(int iBox, int jBox, Direction direction) {
         Movement movement = new Movement(iBox, jBox, direction, true);
 
-        if (!this.canMoveBoxTo(movement.iDest, movement.jDest)) {
+        if (!this.canMoveBoxTo(movement.getiDest(), movement.getjDest())) {
             return null;
         }
 
         return movement;
     }
 
-    public Movement getPlayerMovement(Direction direction) {
+    private Movement getPlayerMovement(Direction direction) {
         Movement movement = new Movement(this.playerI, this.playerJ, direction);
 
-        if (!this.canMoveTo(movement.iDest, movement.jDest)) {
+        if (!this.canMoveTo(movement.getiDest(), movement.getjDest())) {
             return null;
         }
 
         return movement;
     }
 
-    public Sequence<Movement> getMovements(Direction direction) {
+    Sequence<Movement> getMovements(Direction direction) {
         Sequence<Movement> movements = Configuration.instance().new_sequence();
 
         if (direction == Direction.UNDEFINED) {
@@ -226,8 +230,8 @@ public class Level {
             return movements;
         }
 
-        if (this.isBox(playerMovement.iDest, playerMovement.jDest) || this.isBoxOnGoal(playerMovement.iDest, playerMovement.jDest)) {
-            Movement boxMovement = this.getBoxMovement(playerMovement.iDest, playerMovement.jDest, direction);
+        if (this.isBox(playerMovement.getiDest(), playerMovement.getjDest()) || this.isBoxOnGoal(playerMovement.getiDest(), playerMovement.getjDest())) {
+            Movement boxMovement = this.getBoxMovement(playerMovement.getiDest(), playerMovement.getjDest(), direction);
             if (boxMovement == null) {
                 return movements;
             }
@@ -240,7 +244,7 @@ public class Level {
         return movements;
     }
 
-    public Sequence<Movement> getMovementByClick(int i, int j) {
+    Sequence<Movement> getMovementByClick(int i, int j) {
         return this.getMovements(this.getMovingDirection(i, j));
     }
 

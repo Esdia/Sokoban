@@ -20,6 +20,8 @@ public class LevelReader {
         int i;
         int j;
 
+        int nbGoals = 0;
+
         do {
             try {
                 line = scan.nextLine();
@@ -43,7 +45,7 @@ public class LevelReader {
                                 case '*' -> l.addBoxOnGoal(i, j);
                                 case '.' -> {
                                     l.addGoal(i, j);
-                                    l.nbGoals++;
+                                    nbGoals++;
                                 }
                                 default -> { return null; }
                             }
@@ -68,6 +70,7 @@ public class LevelReader {
         if (l.lines() == 0 || l.columns() == 0) {
             return null;
         } else {
+            l.setNbGoals(nbGoals);
             return l;
         }
     }

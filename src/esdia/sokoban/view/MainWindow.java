@@ -1,6 +1,7 @@
 package esdia.sokoban.view;
 
 import esdia.sokoban.global.Configuration;
+import esdia.sokoban.model.Direction;
 import esdia.sokoban.model.Game;
 
 import javax.swing.*;
@@ -8,10 +9,11 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 
 public class MainWindow implements Runnable {
-    Game game;
-    JFrame frame;
-    LevelUI levelUI;
-    EventListener controller;
+    private final Game game;
+    private final JFrame frame;
+    private final LevelUI levelUI;
+    private final EventListener controller;
+
     boolean maximized = false;
 
     private MainWindow(Game game, EventListener controller) {
@@ -22,7 +24,7 @@ public class MainWindow implements Runnable {
     }
 
     public void refreshFrameTitle() {
-        this.frame.setTitle("Sokoban - Level " + this.game.getCurrentLevel().name());
+        this.frame.setTitle("Sokoban - Level " + this.game.name());
     }
 
     @Override
@@ -63,6 +65,26 @@ public class MainWindow implements Runnable {
         return this.levelUI.coordToIndexY(y);
     }
 
+    public int getImgSize() {
+        return this.levelUI.getImgSize();
+    }
+
+    public void setAnimationOffset(int offsetI, int offsetJ) {
+        this.levelUI.setAnimationOffset(offsetI, offsetJ);
+    }
+
+    public void setMovingBox(int movingBoxI, int movingBoxJ) {
+        this.levelUI.setMovingBox(movingBoxI, movingBoxJ);
+    }
+
+    public void setFacingDirection(Direction direction) {
+        this.levelUI.setFacingDirection(direction);
+    }
+
+    public void nextWalkingFrame() {
+        this.levelUI.nextWalkingFrame();
+    }
+
     public void repaint() {
         this.refreshFrameTitle();
         this.levelUI.repaint();
@@ -77,10 +99,6 @@ public class MainWindow implements Runnable {
         this.frame.dispatchEvent(
                 new WindowEvent(this.frame, WindowEvent.WINDOW_CLOSING)
         );
-    }
-
-    public LevelUI getLevelUI() {
-        return this.levelUI;
     }
 
     public static void start(Game game, EventListener gameController) {
